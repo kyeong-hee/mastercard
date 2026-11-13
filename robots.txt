@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /itboard/
+Disallow: /common/
+Disallow: /font/
+Disallow: /plugin/
+
+Sitemap: https://도메인/sitemap.xml

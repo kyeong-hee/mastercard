@@ -1,0 +1,9 @@
+# 로컬 개발 설정
+.claude/
+
+# OS / 에디터
+Thumbs.db
+Desktop.ini
+.DS_Store
+.vscode/
+.idea/
