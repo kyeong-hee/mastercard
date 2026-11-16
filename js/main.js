@@ -299,9 +299,10 @@ $(function(){
     // ---------------------------------------------------------
     // 06. 발급 - 신청하기 버튼 마우스 따라다니기 (PC 마우스 환경)
     //  - 기본 : 시안 위치
-    //  - 따라다니는 영역 : 섹션 전체 (토글 버튼 + 주변 16px 제외)
+    //  - 따라다니는 영역 : 섹션 전체 (토글 버튼 + 주변 16px 제외), 버튼은 섹션 하단을 넘지 않음
+    //  - 커서가 푸터로 내려가면 버튼은 마지막 위치에 멈춤 (푸터 버튼과 겹치지 않게 푸터 안으로는 따라가지 않음)
     //  - 토글(마이신한 포인트 / 스카이패스) 보호 : 토글 위에서는 따라다니지 않고, 버튼도 토글을 피해 바깥으로 비켜감 (겹치지 않음)
-    //  - 영역을 벗어나면 제자리로 부드럽게 복귀 (거리에 따라 .8 ~ 1.2s, ease inOut)
+    //  - 영역을 벗어나거나(푸터·섹션 위·토글 위 등) 토글을 클릭해도 시안 위치로 돌아가지 않고 가장 최근 위치에 그대로 머묾
     //  - 따라다니는 동안 영역 클릭 = 신청하기 링크 클릭 (a·button 은 기존 동작 유지)
     //  - 링크 : $applyUrl (comp/header.php, 신청 페이지 확정 후 교체)
     // ---------------------------------------------------------
@@ -314,38 +315,35 @@ $(function(){
     mm.add('(min-width: 1025px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)', function(){
         const TOGGLE_GAP = 16;   // 토글과 띄울 간격 (커서 제외 영역 / 버튼 간격 모두)
         const FOLLOW = .12;      // 따라가는 부드러움 (작을수록 느긋하게 따라옴)
+        const FOOTER_GAP = 0;    // 버튼과 섹션 하단(푸터) 사이 최소 간격
         const setX = gsap.quickSetter(applyBtn, 'x', 'px');
         const setY = gsap.quickSetter(applyBtn, 'y', 'px');
         const pos = { x: 0, y: 0 };
-        let mx = -1, my = -1, inside = false, moving = false, back = null;
+        let mx = -1, my = -1, inside = false;
 
         function update(){
             const sr = issue.getBoundingClientRect();
             const ir = issueInner.getBoundingClientRect();
             const tr = issueToggle.getBoundingClientRect();
-            const inSection = mx >= sr.left && mx <= sr.right && my >= sr.top && my <= sr.bottom;
+            const inSection = mx >= sr.left && mx <= sr.right && my >= sr.top && my <= sr.bottom;   // 푸터에 들어가면 바로 멈춤
             const onToggle = mx >= tr.left - TOGGLE_GAP && mx <= tr.right + TOGGLE_GAP && my >= tr.top - TOGGLE_GAP && my <= tr.bottom + TOGGLE_GAP;
             const now = inSection && !onToggle;
 
+            // 영역을 벗어나면 따라다니기만 멈추고 버튼은 마지막 위치에 그대로 둠
+            //  - 따라다니는 중에는 버튼 클릭 막음 (멈춰 있을 때는 그 자리에서 클릭 가능)
             if(now !== inside){
                 inside = now;
                 issue.classList.toggle('apply_follow', inside);
-                if(inside){
-                    if(back){ back.kill(); back = null; }
-                }else{
-                    // 제자리 복귀 : 이동 거리에 비례한 시간으로 부드럽게
-                    const dist = Math.hypot(pos.x, pos.y);
-                    back = gsap.to(pos, { x: 0, y: 0, duration: gsap.utils.clamp(.8, 1.2, dist / 500), ease: 'power2.inOut', onComplete: function(){ back = null; } });
-                }
+                applyBtn.classList.toggle('is_moving', inside);
             }
 
             if(inside){
-                // 버튼 원래 위치(transform 제외) 중심 → 커서 (섹션 밖으로 나가지 않게 제한)
+                // 버튼 원래 위치(transform 제외) 중심 → 커서 (섹션 밖으로 나가지 않게 제한, 아래쪽은 푸터와 FOOTER_GAP 만큼 띄움)
                 const w = applyBtn.offsetWidth, h = applyBtn.offsetHeight;
                 const ox = ir.left + applyBtn.offsetLeft + w / 2;
                 const oy = ir.top + applyBtn.offsetTop + h / 2;
                 let cx = gsap.utils.clamp(sr.left + w / 2, sr.right - w / 2, mx);
-                let cy = gsap.utils.clamp(sr.top + h / 2, sr.bottom - h / 2, my);
+                let cy = gsap.utils.clamp(sr.top + h / 2, sr.bottom - FOOTER_GAP - h / 2, my);
                 // 버튼이 토글과 겹치게 되면 가장 가까운 바깥쪽(상/하/좌/우)으로 밀어냄
                 const el = tr.left - TOGGLE_GAP - w / 2, er = tr.right + TOGGLE_GAP + w / 2;
                 const et = tr.top - TOGGLE_GAP - h / 2, eb = tr.bottom + TOGGLE_GAP + h / 2;
@@ -360,13 +358,6 @@ $(function(){
             }
             setX(pos.x);
             setY(pos.y);
-
-            // 따라다니는 중 + 제자리로 복귀하는 중에는 버튼 클릭 막음
-            const away = inside || back !== null || Math.abs(pos.x) > 1 || Math.abs(pos.y) > 1;
-            if(away !== moving){
-                moving = away;
-                applyBtn.classList.toggle('is_moving', moving);
-            }
         }
         function onMove(e){
             if(e.pointerType && e.pointerType !== 'mouse') return;
@@ -388,7 +379,6 @@ $(function(){
             document.documentElement.removeEventListener('pointerleave', onLeave);
             issue.removeEventListener('click', onClick);
             gsap.ticker.remove(update);
-            if(back) back.kill();
             issue.classList.remove('apply_follow');
             applyBtn.classList.remove('is_moving');
             gsap.set(applyBtn, { clearProps: 'transform' });
