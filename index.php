@@ -297,24 +297,24 @@
                         <div class="swiper dining_swiper">
                             <ul class="swiper-wrapper">
                                 <li class="swiper-slide">
-                                    <div class="img"><picture><source media="(max-width: 1024px)" srcset="/img/main/dining01_mo.jpg"><img src="/img/main/dining01.jpg" alt="" draggable="false"></picture></div>
-                                    <p class="name">차이나룸 몬드리안호텔</p>
-                                </li>
-                                <li class="swiper-slide">
-                                    <div class="img"><picture><source media="(max-width: 1024px)" srcset="/img/main/dining02_mo.jpg"><img src="/img/main/dining02.jpg" alt="" draggable="false"></picture></div>
-                                    <p class="name">윌로뜨</p>
+                                    <div class="img"><picture><source media="(max-width: 1024px)" srcset="/img/main/dining04_mo.jpg"><img src="/img/main/dining04.jpg" alt="" draggable="false"></picture></div>
+                                    <p class="name">알라프리마</p>
                                 </li>
                                 <li class="swiper-slide">
                                     <div class="img"><picture><source media="(max-width: 1024px)" srcset="/img/main/dining03_mo.jpg"><img src="/img/main/dining03.jpg" alt="" draggable="false"></picture></div>
                                     <p class="name">기가스</p>
                                 </li>
                                 <li class="swiper-slide">
-                                    <div class="img"><picture><source media="(max-width: 1024px)" srcset="/img/main/dining04_mo.jpg"><img src="/img/main/dining04.jpg" alt="" draggable="false"></picture></div>
-                                    <p class="name">알라프리마</p>
-                                </li>
-                                <li class="swiper-slide">
                                     <div class="img"><picture><source media="(max-width: 1024px)" srcset="/img/main/dining05_mo.jpg"><img src="/img/main/dining05.jpg" alt="" draggable="false"></picture></div>
                                     <p class="name">라마띠에</p>
+                                </li>
+                                <li class="swiper-slide">
+                                    <div class="img"><picture><source media="(max-width: 1024px)" srcset="/img/main/dining02_mo.jpg"><img src="/img/main/dining02.jpg" alt="" draggable="false"></picture></div>
+                                    <p class="name">윌로뜨</p>
+                                </li>
+                                <li class="swiper-slide">
+                                    <div class="img"><picture><source media="(max-width: 1024px)" srcset="/img/main/dining01_mo.jpg"><img src="/img/main/dining01.jpg" alt="" draggable="false"></picture></div>
+                                    <p class="name">차이나룸 몬드리안호텔</p>
                                 </li>
                                 <li class="swiper-slide">
                                     <div class="img"><img src="/img/main/dining06.jpg" alt="" draggable="false"></div>
