@@ -321,7 +321,8 @@ body {background-color: #141415;}
 	.m_vis .vis_tit {left: var(--mo-gut); right: var(--mo-gut); top: 356px; text-align: center; font-size: 36px; line-height: 1.3; letter-spacing: -0.02em; white-space: normal;}
 
 	/* 02 */
-	.m_lineup_wrap .lineup_light {width: 100%; max-width: 500px; left: 50%; transform: translateX(-50%);}
+	/* 가운데 정렬 : 고정(pin) 시 위치 계산이 어긋나지 않도록 transform 대신 left · right · margin auto 사용 */
+	.m_lineup_wrap .lineup_light {width: 100%; max-width: 500px; left: 0; right: 0; margin: 0 auto;}
 	.m_lineup_wrap .light1 {top: 40px;}
 	.m_lineup_wrap .light2 {top: 1038.43px;}
 	.m_lineup {height: auto; padding: 100px 0;}

@@ -7,7 +7,7 @@ $(function(){
     // ---------------------------------------------------------
     // 02. 혜택 라인업 MOTION (참고 : mastercard_main_C_1.html 라인업 섹션 모션)
     //  ※ 디자인(위치·크기·이미지)은 피그마 시안 그대로, 모션만 적용
-    //  - 배경 빛 : PC 02 ~ 03 스크롤 동안 화면 고정(광선 연속) → 03 끝에서 고정 해제
+    //  - 배경 빛 : PC · MO 02 ~ 03 스크롤 동안 화면 고정(광선 연속) → 03 끝에서 고정 해제
     //  - 빛 스윕 : 섹션 진입 직후 마스크가 열리며 퍼짐 (최종 상태 = 시안 이미지)
     //  - 타이틀·설명 : PC 화면 고정, 이미지만 스크롤 → 섹션 끝나면 페이드아웃
     //  - 혜택 이미지 : 스크롤 등장
@@ -70,6 +70,16 @@ $(function(){
                     end: function(){ return fadeAt(20); },
                 },
             });
+        } else {
+            // MO 배경 빛 고정 : PC 와 동일하게 light1 하나를 02 ~ 03 끝까지 고정해 광선이 끊기지 않고 이어지게 함
+            //                  light1 이 화면 중앙에 오는 지점(시안 배치 그대로)부터 고정 → light1 하단이 공통 배경 하단에 닿으면 고정 해제
+            //                  (light2 · 03 배경 빛(light_benefit)은 동일 이미지라 고정 중에는 숨기고 light1 이 대신함)
+            gsap.set([light2, wrap.querySelector('.light_benefit')], { autoAlpha: 0 });
+            ScrollTrigger.create({
+                trigger: light1, start: 'center center',
+                end: function(){ return '+=' + Math.max(0, wrap.offsetHeight - light1.offsetTop - light1.offsetHeight); },
+                pin: true, pinSpacing: false, invalidateOnRefresh: true,
+            });
         }
 
         // 참고 HTML 이징 : --ease cubic-bezier(.22,.61,.36,1)
@@ -79,7 +89,7 @@ $(function(){
         //          ※ 모션 타이밍만 조정, 밝기·위치 등 디자인은 시안 그대로
         //          광선 마스크 경계(--draw)는 사선 라인 위치(약 .62)에서 시작해 이미지 끝(1.15)까지 열림
         //          PC 는 02 섹션이 화면 하단 20% 들어왔을 때 바로 시작 (기존 37% 노출 시점 → 초반 배경이 허전해 앞당김)
-        const lightImgs = isPC ? [light1.querySelector('img')] : gsap.utils.toArray('.lineup_light img', wrap);
+        const lightImgs = [light1.querySelector('img')]; // PC · MO 모두 고정된 light1 하나만 펼침
         const lightLine = light1.querySelector('.light_line path');
         // ※ 1회 재생 모션은 once:true 대신 end:'max' + toggleActions 'play none none none' 사용 (화면 동작 동일)
         //    once 트리거는 새로고침(스크롤 위치 복원) 시 위치 계산 도중 스스로 제거되어, 아래 04 섹션 pin 계산 중 ScrollTrigger 오류 발생
