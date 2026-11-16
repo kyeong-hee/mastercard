@@ -72,8 +72,10 @@
 
                         <!-- PC : 타이틀·설명 고정 / 이미지만 스크롤 -->
                         <div class="lineup_fix">
-                            <h2 class="lineup_tit">당신의 기준을 높이는,<br><b>하나의 카드</b></h2>
-                            <p class="lineup_desc lineup_desc_l pc_only">비교할 수 없는 가치로 당신의 일상에 깊이를 더하는<br>신한 The ACE Elite만의 <b>독점적 혜택 라인업</b></p>
+                            <div class="lineup_fix_in">
+                                <h2 class="lineup_tit">당신의 기준을 높이는,<br><b>하나의 카드</b></h2>
+                                <p class="lineup_desc lineup_desc_l pc_only">비교할 수 없는 가치로 당신의 일상에 깊이를 더하는<br>신한 The ACE Elite만의 <b>독점적 혜택 라인업</b></p>
+                            </div>
                         </div>
 
                         <!-- PC 카드 플레이트 (마이신한 포인트형 / 스카이패스형) + 설명 -->

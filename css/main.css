@@ -70,6 +70,8 @@
 /* [모션] PC 타이틀·설명 고정 영역 (JS pin) - 시안 타이틀 top 252 / 설명 top 469 (섹션 기준) */
 .m_lineup .lineup_fix {position: absolute; left: 0; top: 0; z-index: 1; width: 100%; height: 100vh; pointer-events: none; transition: opacity .5s;}
 .m_lineup.is_out .lineup_fix {opacity: 0;}
+/* [모션] 섹션 진입 페이드인 전용 래퍼 (고정 영역 is_out · 겹침 방지 페이드와 분리) */
+.m_lineup .lineup_fix_in {position: absolute; inset: 0;}
 .m_lineup .lineup_tit {position: absolute; left: 0; top: 252px; font-family: var(--f-suit); font-size: min(70px, 4.375vw); line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap;}
 .m_lineup .lineup_tit b {font-weight: 600;}
 .m_lineup .lineup_desc {font-family: var(--f-suit); font-size: 18px; line-height: 1.6; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap;}
@@ -322,6 +324,7 @@
 	.m_lineup {height: auto; padding: 100px 0;}
 	.m_lineup .lineup_inner {height: auto;}
 	.m_lineup .lineup_fix {position: static; height: auto; pointer-events: auto;}
+	.m_lineup .lineup_fix_in {position: static;}
 	.m_lineup .lineup_card {display: flex; justify-content: center; gap: 16px; padding-bottom: 48px;}
 	.m_lineup .lineup_card img {width: 148px; height: 234px; object-fit: cover;}
 	.m_lineup .lineup_tit,

@@ -109,6 +109,17 @@ $(function(){
                 .from(item, { y: 80, duration: 1.2, ease: easeHtml }, 0);
         });
 
+        // 섹션 진입 시 타이틀(좌) · 카드 플레이트(우) 페이드인 / 1회
+        //  - PC : 타이틀·설명 먼저 → 카드 플레이트 .2s 뒤 / MO : 카드 플레이트(상단) 먼저 → 타이틀
+        //  - 타이틀은 겹침 방지 스크롤 페이드(.lineup_tit · .lineup_desc_l)와 충돌하지 않도록 래퍼(.lineup_fix_in)에 적용
+        const introTit = lineup.querySelector('.lineup_fix_in');
+        const introCard = lineup.querySelector(isPC ? '.lineup_card_pc' : '.lineup_card');
+        gsap.timeline({ scrollTrigger: { trigger: lineup, once: true, start: isPC ? 'top 60%' : 'top 75%' } })
+            .from(isPC ? introTit : introCard, { opacity: 0, duration: 1, ease: easeHtml }, 0)
+            .from(isPC ? introTit : introCard, { y: 60, duration: 1.2, ease: easeHtml }, 0)
+            .from(isPC ? introCard : introTit, { opacity: 0, duration: 1, ease: easeHtml }, .2)
+            .from(isPC ? introCard : introTit, { y: 60, duration: 1.2, ease: easeHtml }, .2);
+
         return function(){
             lineup.classList.remove('is_out');
             gsap.set(light1, { clearProps: 'opacity' });
