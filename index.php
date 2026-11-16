@@ -193,7 +193,7 @@
                         <p class="benefit_note">※ 전월 이용금액 기준/신한카드 The ACE Elite 서비스 적용 기준으로 <br class="mo_only">제공됩니다.</p>
 
                         <div class="btn_wrap">
-                            <a href="#none" class="btn_more">상품 혜택 확인하기 <i class="xi-angle-right-min" aria-hidden="true"></i></a>
+                            <a href="#none" class="btn_more btn_fx">상품 혜택 확인하기 <i class="xi-angle-right-min" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </section>
@@ -219,7 +219,7 @@
                                     <p class="tit">다이닝 특전</p>
                                     <p class="desc">국내외 파인다이닝 레스토랑 할인 및 예약,<br class="mo_only"> 호텔 미식 혜택 제공</p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
+                                        <a href="#none" class="btn_line btn_fx">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -234,7 +234,7 @@
                                     <p class="tit">프리미엄 엔터테인먼트 혜택</p>
                                     <p class="desc">최고의 공연, 스포츠 경기를 가장 빠르게,<br class="mo_only"> 누구보다 먼저</p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
+                                        <a href="#none" class="btn_line btn_fx">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -248,7 +248,7 @@
                                     <p class="tit">더 특별한 여정을 완성하는<br> 글로벌 호텔 혜택</p>
                                     <p class="desc">무료 숙박부터 글로벌 호텔 멤버십까지, <br/> World Elite 회원만의 프리미엄 혜택</p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
+                                        <a href="#none" class="btn_line btn_fx">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -262,7 +262,7 @@
                                     <p class="tit">프리미엄 아울렛 혜택</p>
                                     <p class="desc">비스터 컬렉션·맥아더글렌 아울렛에서<br/> 누리는 World Elite 전용 할인 혜택 </p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
+                                        <a href="#none" class="btn_line btn_fx">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -284,7 +284,7 @@
                 <div class="wrap" max="1600">
                     <div class="season_top">
                         <h2 class="sec_tit">시즈널 혜택</h2>
-                        <a href="#none" class="btn_more pc_only">시즈널 혜택 확인하기 <i class="xi-angle-right-min" aria-hidden="true"></i></a>
+                        <a href="#none" class="btn_more btn_fx pc_only">시즈널 혜택 확인하기 <i class="xi-angle-right-min" aria-hidden="true"></i></a>
                     </div>
 
                     <!-- 국내 다이닝 -->
@@ -366,7 +366,7 @@
                     </ul>
 
                     <div class="btn_wrap mo_only">
-                        <a href="#none" class="btn_more">시즈널 혜택 확인하기 <i class="xi-angle-right-min" aria-hidden="true"></i></a>
+                        <a href="#none" class="btn_more btn_fx">시즈널 혜택 확인하기 <i class="xi-angle-right-min" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </section>

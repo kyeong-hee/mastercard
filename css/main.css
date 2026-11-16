@@ -30,11 +30,9 @@ body {background-color: #141415;}
 
 /* 공통 라인 버튼 (상품 혜택 확인하기 · 시즈널 혜택 확인하기) */
 .main .btn_wrap {display: flex; justify-content: center;}
-.main .btn_more {display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 19px; border: 1px solid #fff; border-radius: 30px; font-family: var(--f-pre); font-size: 16px; line-height: 1.4; font-weight: 500; letter-spacing: -0.02em; white-space: nowrap; transition: background-color .3s, color .3s;}
+.main .btn_more {display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 19px; border: 1px solid #fff; border-radius: 30px; font-family: var(--f-pre); font-size: 16px; line-height: 1.4; font-weight: 500; letter-spacing: -0.02em; white-space: nowrap; transition: color .45s;}
 .main .btn_more i {font-size: 16px;}
-@media (hover: hover) {
-	.main .btn_more:hover {background-color: #fff; color: #000;}
-}
+/* 호버 : 원형 퍼짐 채움 (.btn_fx · css/layout.css) */
 
 
 /* ---------------------------------------------------------
@@ -142,12 +140,13 @@ body {background-color: #141415;}
 .m_we .slide_txt .tit {font-family: var(--f-pre); font-size: 54px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em;}
 .m_we .slide_txt .desc {min-height: 28px; margin-top: 15px; font-family: var(--f-pre); font-size: 20px; line-height: 1.4; font-weight: 500; letter-spacing: -0.02em; opacity: .7;}
 .m_we .slide_txt .btns {display: flex; margin-top: 70.4px;}
-.m_we .btn_line {display: inline-flex; align-items: center; justify-content: center; gap: 5px; height: 44px; padding: 0 20px; border: 1px solid #fff; border-radius: 31px; font-family: var(--f-noto); font-size: 16px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; transition: background-color .3s, color .3s;}
-.m_we .btn_line img {width: 13px; height: 26px; transition: filter .3s;}
+.m_we .btn_line {display: inline-flex; align-items: center; justify-content: center; gap: 5px; height: 44px; padding: 0 20px; border: 1px solid #fff; border-radius: 31px; font-family: var(--f-noto); font-size: 16px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; transition: color .45s;}
+.m_we .btn_line img {width: 13px; height: 26px; transition: filter .45s;}
+/* 호버 : 원형 퍼짐 채움 (.btn_fx · css/layout.css) */
 @media (hover: hover) {
-	.m_we .btn_line:hover {background-color: #fff; color: #000;}
 	.m_we .btn_line:hover img {filter: invert(1);}
 }
+.m_we .btn_line:focus-visible img {filter: invert(1);}
 
 .m_we .we_bar {position: absolute; right: 0; bottom: 38px; z-index: 2; display: flex; gap: 1.148%; width: 49%; padding: 0 5.61% 0 6.76%;}
 .m_we .we_bar button {position: relative; flex: 1; height: 3px; background-color: #828287; transition: background-color .3s;}
@@ -312,7 +311,7 @@ body {background-color: #141415;}
 	.main .btn_more i,
 	.m_we .btn_line img {display: none;}
 	.main .btn_more::after,
-	.m_we .btn_line::after {content: ''; width: 14px; height: 14px; background: url(/img/main/ico_chevron14.svg) no-repeat center / contain; transition: filter .3s;}
+	.m_we .btn_line::after {content: ''; width: 14px; height: 14px; background: url(/img/main/ico_chevron14.svg) no-repeat center / contain; transition: filter .45s;}
 
 	/* 01 */
 	.m_vis {height: 700px; background-color: #030303;}
