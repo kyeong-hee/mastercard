@@ -221,11 +221,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- [자료 수급 필요] 02~04 이미지·설명 문구 메인시안 미제공 → 구조만 구성, 이미지는 임시(다이닝) -->
+                            <!-- 02~04 이미지 : 다이닝 이미지 기준(784×784) 크롭본 적용 / MO도 1:1 영역이라 동일 이미지 사용 -->
                             <div class="swiper-slide">
                                 <div class="slide_img">
                                     <picture>
-                                        <img src="/img/main/we_dining.jpg" alt="">
+                                        <img src="/img/main/we_ent.jpg" alt="조명이 켜진 대형 공연장 무대와 관객석">
                                     </picture>
                                 </div>
                                 <div class="slide_txt">
@@ -239,7 +239,7 @@
                             <div class="swiper-slide">
                                 <div class="slide_img">
                                     <picture>
-                                        <img src="/img/main/we_dining.jpg" alt="">
+                                        <img src="/img/main/we_hotel.jpg" alt="야경이 내려다보이는 호텔 객실">
                                     </picture>
                                 </div>
                                 <div class="slide_txt">
@@ -253,7 +253,7 @@
                             <div class="swiper-slide">
                                 <div class="slide_img">
                                     <picture>
-                                        <img src="/img/main/we_dining.jpg" alt="">
+                                        <img src="/img/main/we_outlet.jpg" alt="쇼핑백을 든 채 명품 매장 쇼윈도를 바라보는 여성">
                                     </picture>
                                 </div>
                                 <div class="slide_txt">
