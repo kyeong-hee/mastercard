@@ -166,7 +166,7 @@
                             <li class="box">
                                 <p class="tit">VIP Life Style 결제일 할인 서비스</p>
                                 <ul class="dot_list">
-                                    <li>헬스케어, 쇼핑/문화, 골프, 택시 영역 5% 결제일 할인</li>
+                                    <li>헬스케어, 쇼핑/문화, 골프, 택시 영역 <br class="mo_only"> 5% 결제일 할인</li>
                                 </ul>
                             </li>
                             <li class="box">
@@ -290,7 +290,7 @@
                     <!-- 국내 다이닝 -->
                     <div class="season_head">
                         <p class="tit"><span class="mark">·•</span> 국내 다이닝 혜택</p>
-                        <p class="desc dining"><span class="dim">신한ACE 프리미엄 고객을 위한 파인다이닝 레스토랑<span class="pc_only">&nbsp; | &nbsp;</span></span><br class="mo_only">프리미엄 다이닝 1+1 제공 (런치 및 석식)</p>
+                        <p class="desc dining"><span class="dim">신한ACE 프리미엄 고객을 위한 파인다이닝 레스토랑<span class="pc_only">&nbsp; | &nbsp;</span></span><br class="mo_only">프리미엄 다이닝 2인이상 코스 주문시 1인 무료</p>
                     </div>
 
                     <div class="dining_area">
