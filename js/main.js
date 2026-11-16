@@ -142,31 +142,73 @@ $(function(){
 
     // ---------------------------------------------------------
     // 05. 시즈널 혜택 - 국내 다이닝 드래그 리스트
+    //     - 자동 롤링 : 3초마다 1칸씩 이동(loop), 드래그 후에도 자동 롤링 유지
+    //     - PC 마우스 오버 중에는 일시정지 (DRAG 커서로 직접 넘겨보는 동안)
+    //     - 화면에 보일 때만 롤링, 동작 줄이기(prefers-reduced-motion) 설정 시 자동 롤링 안 함
     // ---------------------------------------------------------
-    new Swiper('.dining_swiper', {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const diningSwiper = new Swiper('.dining_swiper', {
         slidesPerView: 'auto',
         spaceBetween: 12,
+        loop: true,
+        speed: 900,
+        autoplay: reduceMotion ? false : {
+            delay: 3000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+        },
         breakpoints: {
             1025: { spaceBetween: 20 },
         },
     });
+    if(diningSwiper.autoplay && !reduceMotion){
+        diningSwiper.autoplay.stop();
+        ScrollTrigger.create({
+            trigger: '.dining_area',
+            start: 'top bottom',
+            end: 'bottom top',
+            onToggle: function(self){
+                self.isActive ? diningSwiper.autoplay.start() : diningSwiper.autoplay.stop();
+            },
+        });
+    }
 
     // DRAG 커서 (PC 마우스 환경)
-    const $diningArea = $('.dining_area');
-    const $dragCursor = $diningArea.find('.drag_cursor');
-    if(window.matchMedia('(hover: hover) and (pointer: fine)').matches){
-        const moveX = gsap.quickTo($dragCursor[0], 'x', { duration: .35, ease: 'power3' });
-        const moveY = gsap.quickTo($dragCursor[0], 'y', { duration: .35, ease: 'power3' });
-        $diningArea.find('.dining_swiper').on('mouseenter', function(e){
-            const r = $diningArea[0].getBoundingClientRect();
-            gsap.set($dragCursor[0], { x: e.clientX - r.left, y: e.clientY - r.top });
-            $diningArea.addClass('drag_on');
-        }).on('mousemove', function(e){
-            const r = $diningArea[0].getBoundingClientRect();
-            moveX(e.clientX - r.left);
-            moveY(e.clientY - r.top);
-        }).on('mouseleave', function(){
-            $diningArea.removeClass('drag_on');
+    //  - 마우스 좌표만 기록하고, 위치 계산·이동은 gsap.ticker 1곳에서 프레임당 1회 처리
+    //  - 매 프레임 영역 위치를 다시 읽어 ScrollSmoother 스크롤 중에도 커서가 마우스에 붙어 있음
+    const diningArea = document.querySelector('.dining_area');
+    const dragCursor = diningArea && diningArea.querySelector('.drag_cursor');
+    if(dragCursor && window.matchMedia('(hover: hover) and (pointer: fine)').matches){
+        const FOLLOW = .35; // 60fps 기준 프레임당 따라붙는 비율 (1 = 즉시)
+        let mouseX = 0, mouseY = 0, curX = 0, curY = 0, active = false;
+
+        const render = function(){
+            const r = diningArea.getBoundingClientRect();
+            const tx = mouseX - r.left;
+            const ty = mouseY - r.top;
+            const k = 1 - Math.pow(1 - FOLLOW, gsap.ticker.deltaRatio()); // 주사율과 무관하게 같은 속도
+            curX += (tx - curX) * k;
+            curY += (ty - curY) * k;
+            dragCursor.style.transform = 'translate3d(' + curX + 'px,' + curY + 'px,0)';
+            // 커서가 사라진 뒤 목표 지점에 도착하면 ticker 해제
+            if(!active && Math.abs(tx - curX) < .1 && Math.abs(ty - curY) < .1) gsap.ticker.remove(render);
+        };
+
+        const swiperEl = diningArea.querySelector('.dining_swiper');
+        swiperEl.addEventListener('mouseenter', function(e){
+            const r = diningArea.getBoundingClientRect();
+            mouseX = e.clientX; mouseY = e.clientY;
+            curX = mouseX - r.left; curY = mouseY - r.top; // 진입 지점에서 바로 시작
+            active = true;
+            gsap.ticker.add(render);
+            diningArea.classList.add('drag_on');
+        });
+        swiperEl.addEventListener('mousemove', function(e){
+            mouseX = e.clientX; mouseY = e.clientY;
+        }, { passive: true });
+        swiperEl.addEventListener('mouseleave', function(){
+            active = false;
+            diningArea.classList.remove('drag_on');
         });
     }
 

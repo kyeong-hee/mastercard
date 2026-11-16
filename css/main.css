@@ -162,17 +162,21 @@
 .m_season .season_head .desc.dining {font-weight: 500; color: #fff;}
 .m_season .season_head .desc .dim {color: rgba(255, 255, 255, .7);}
 
-/* 다이닝 리스트 (드래그) */
+/* 다이닝 리스트 (드래그 + 자동 롤링) */
 .m_season .dining_area {position: relative; margin-top: 30.4px;}
 .m_season .dining_swiper {width: calc(50vw + 50%); margin: 0; -webkit-mask-image: linear-gradient(to right, #000 77.39%, transparent 100%); mask-image: linear-gradient(to right, #000 77.39%, transparent 100%);}
+.m_season .dining_swiper .swiper-wrapper {transition-timing-function: cubic-bezier(.65, 0, .35, 1);}
 .m_season .dining_swiper .swiper-slide {width: 380px;}
 .m_season .dining_swiper .img {height: 280px; overflow: hidden;}
 .m_season .dining_swiper .img img {width: 100%; height: 100%; object-fit: cover; pointer-events: none;}
 .m_season .dining_swiper .name {margin-top: 15px; font-family: var(--f-suit); font-size: 18px; line-height: 1.4; font-weight: 500; letter-spacing: -0.02em; white-space: nowrap;}
 
-/* DRAG 커서 : 시안 80 원형 (흰 배경 · 검정 텍스트) */
-.m_season .drag_cursor {position: absolute; left: 0; top: 0; z-index: 3; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; margin: -40px 0 0 -40px; border: 1px solid #fff; border-radius: 50%; background-color: #fff; font-family: var(--f-suit); font-size: 14px; line-height: 1.6; font-weight: 600; letter-spacing: -0.02em; color: #000; pointer-events: none; opacity: 0; transform: scale(.6); transition: opacity .3s, transform .3s;}
-.m_season .dining_area.drag_on .drag_cursor {opacity: 1; transform: scale(1);}
+/* DRAG 커서 : 시안 80 원형 (흰 배경 · 검정 텍스트)
+   - 바깥 .drag_cursor : JS가 위치(transform)만 담당
+   - 안쪽 .in : 노출/숨김(scale·opacity) CSS 트랜지션 담당 → 두 transform이 충돌하지 않게 분리 (커서 끌림 현상 개선) */
+.m_season .drag_cursor {position: absolute; left: 0; top: 0; z-index: 3; width: 80px; height: 80px; margin: -40px 0 0 -40px; pointer-events: none; will-change: transform;}
+.m_season .drag_cursor .in {display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border: 1px solid #fff; border-radius: 50%; background-color: #fff; font-family: var(--f-suit); font-size: 14px; line-height: 1.6; font-weight: 600; letter-spacing: -0.02em; color: #000; opacity: 0; transform: scale(.6); transition: opacity .3s, transform .3s;}
+.m_season .dining_area.drag_on .drag_cursor .in {opacity: 1; transform: scale(1);}
 @media (hover: hover) and (pointer: fine) {
 	.m_season .dining_swiper {cursor: none;}
 }

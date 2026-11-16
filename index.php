@@ -336,7 +336,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <span class="drag_cursor" aria-hidden="true">Drag</span>
+                        <span class="drag_cursor" aria-hidden="true"><span class="in">Drag</span></span>
                     </div>
 
                     <hr class="season_line">
