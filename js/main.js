@@ -148,10 +148,10 @@ $(function(){
     // 04. World Elite 큐레이션 롤링
     //     01 다이닝 → 02 엔터테인먼트 → 03 호텔 → 04 아울렛
     //     이미지와 텍스트가 함께 롤링 (시안 설명 반영)
-    //  - PC(1025px 이상) 스크롤 고정(pin) : 섹션을 화면에 고정하고 스크롤 진행도에 따라 01 → 04 전환
+    //  - PC(1025px 이상 + 마우스 환경) 스크롤 고정(pin) : 섹션을 화면에 고정하고 스크롤 진행도에 따라 01 → 04 전환
     //                       4개 혜택을 모두 본 뒤(04 구간까지 스크롤)에 고정 해제 → 다음 섹션으로 이동
     //                       역스크롤 시 04 → 01 순으로 되돌아감 / 하단 4분할 라인 클릭 시 해당 혜택 구간으로 스크롤 이동
-    //  - MO(1024px 이하) : 고정 없이 자동 롤링(4초) + 스와이프로 넘기기 / 라인 클릭 시 해당 혜택으로 전환
+    //  - MO(1024px 이하)·태블릿(1025px 이상 터치 기기 - 가로모드 iPad 등) : 고정 없이 자동 롤링(4초) + 스와이프로 넘기기 / 라인 클릭 시 해당 혜택으로 전환
     //  - prefers-reduced-motion : reduce 인 경우 PC 도 고정 없이 MO 와 동일하게 동작
     // ---------------------------------------------------------
     const $weBar = $('.m_we .we_bar button');
@@ -182,7 +182,8 @@ $(function(){
         else gsap.to(window, { scrollTo: y, duration: .8, ease: 'power2.inOut' });
     });
 
-    mm.add('(min-width: 1025px) and (prefers-reduced-motion: no-preference)', function(){
+    // 태블릿 구분 : 터치 기기는 hover 불가 + pointer coarse (iPadOS 데스크톱 UA 로 접속해도 미디어쿼리로 구분됨)
+    mm.add('(min-width: 1025px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)', function(){
         weSwiper.autoplay.stop();
         weSwiper.allowTouchMove = false; // 스와이프로 넘기면 스크롤 위치와 어긋나므로 스크롤로만 전환
         weSwiper.slideTo(0, 0);
