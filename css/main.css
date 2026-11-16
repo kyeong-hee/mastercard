@@ -33,18 +33,7 @@ body {background-color: #141415;}
 .main .btn_more {display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 19px; border: 1px solid #fff; border-radius: 30px; font-family: var(--f-pre); font-size: 16px; line-height: 1.4; font-weight: 500; letter-spacing: -0.02em; white-space: nowrap; transition: color .45s;}
 .main .btn_more i {font-size: 16px;}
 
-/* [모션] 메인 버튼 호버 : 원형 퍼짐 채움 (.btn_fx - 메인 전용 / 헤더 등 공통 버튼은 미적용)
-   - 커서가 들어온 지점에서 작은 원이 생겨 버튼 전체로 퍼지며 색이 채워짐 / 나갈 때는 나간 지점으로 줄어듦
-   - 위치·크기 : js/main.js (버튼 호버) 가 --fx-x · --fx-y · --fx-d 세팅 (JS 없으면 가운데에서 퍼짐)
-   - 색상 : --fx-c (채움색) · --fx-t (채움 시 글자색) / 키보드 포커스(:focus-visible) 동일 */
-.main .btn_fx {position: relative; overflow: hidden; isolation: isolate; --fx-c: #fff; --fx-t: #000;}
-.main .btn_fx::before {content: ''; position: absolute; left: var(--fx-x, 50%); top: var(--fx-y, 50%); z-index: -1; width: var(--fx-d, 250%); aspect-ratio: 1; border-radius: 50%; background-color: var(--fx-c); transform: translate(-50%, -50%) scale(0); transition: transform .5s cubic-bezier(.4, 0, .2, 1); pointer-events: none;}
-.main .btn_fx:focus-visible::before {transform: translate(-50%, -50%) scale(1); transition-duration: .7s; transition-timing-function: cubic-bezier(.22, 1, .36, 1);}
-.main .btn_fx:focus-visible {color: var(--fx-t);}
-@media (hover: hover) {
-	.main .btn_fx:hover::before {transform: translate(-50%, -50%) scale(1); transition-duration: .7s; transition-timing-function: cubic-bezier(.22, 1, .36, 1);}
-	.main .btn_fx:hover {color: var(--fx-t);}
-}
+/* 호버 : 원형 퍼짐 채움 (.btn_fx · 공통 css/layout.css · js/layout.js) */
 
 
 /* ---------------------------------------------------------
@@ -154,7 +143,7 @@ body {background-color: #141415;}
 .m_we .slide_txt .btns {display: flex; margin-top: 70.4px;}
 .m_we .btn_line {display: inline-flex; align-items: center; justify-content: center; gap: 5px; height: 44px; padding: 0 20px; border: 1px solid #fff; border-radius: 31px; font-family: var(--f-noto); font-size: 16px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; transition: color .45s;}
 .m_we .btn_line img {width: 13px; height: 26px; transition: filter .45s;}
-/* 호버 : 원형 퍼짐 채움 (.btn_fx) */
+/* 호버 : 원형 퍼짐 채움 (.btn_fx · 공통 css/layout.css) */
 @media (hover: hover) {
 	.m_we .btn_line:hover img {filter: invert(1);}
 }
@@ -456,7 +445,6 @@ body {background-color: #141415;}
 
 /* 모션 최소화 설정 존중 */
 @media (prefers-reduced-motion: reduce) {
-	.main .btn_fx::before {transition: none !important;}
 	.m_lineup .lineup_fix {transition: none;}
 	.m_lineup_wrap .light_line path {stroke-dashoffset: 0;}
 	.m_season .golf_list > li::after,

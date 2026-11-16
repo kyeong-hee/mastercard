@@ -18,6 +18,27 @@ button {background: none; border: 0; padding: 0; cursor: pointer; color: inherit
 
 
 /* ---------------------------------------------------------
+	[공통 모션] 버튼 호버 : 원형 퍼짐 채움 (.btn_fx)
+	- 사용법 : 버튼(a·button)에 class="btn_fx" 만 추가하면 적용 (클래스 없는 버튼은 영향 없음)
+	- 커서가 들어온 지점에서 작은 원이 생겨 버튼 전체로 퍼지며 색이 채워짐 / 나갈 때는 나간 지점으로 줄어듦
+	- 위치·크기 : js/layout.js (btnFx) 가 --fx-x · --fx-y · --fx-d 세팅 (JS 없으면 가운데에서 퍼짐)
+	- 색상 : --fx-c (채움색, 기본 #fff) · --fx-t (채움 시 글자색, 기본 #000) 를 버튼별로 덮어써서 지정
+	- 키보드 포커스(:focus-visible) 동일 / 움직임 줄이기 설정 시 즉시 채움
+--------------------------------------------------------- */
+.btn_fx {position: relative; overflow: hidden; isolation: isolate; --fx-c: #fff; --fx-t: #000;}
+.btn_fx::before {content: ''; position: absolute; left: var(--fx-x, 50%); top: var(--fx-y, 50%); z-index: -1; width: var(--fx-d, 250%); aspect-ratio: 1; border-radius: 50%; background-color: var(--fx-c); transform: translate(-50%, -50%) scale(0); transition: transform .5s cubic-bezier(.4, 0, .2, 1); pointer-events: none;}
+.btn_fx:focus-visible::before {transform: translate(-50%, -50%) scale(1); transition-duration: .7s; transition-timing-function: cubic-bezier(.22, 1, .36, 1);}
+.btn_fx:focus-visible {color: var(--fx-t);}
+@media (hover: hover) {
+	.btn_fx:hover::before {transform: translate(-50%, -50%) scale(1); transition-duration: .7s; transition-timing-function: cubic-bezier(.22, 1, .36, 1);}
+	.btn_fx:hover {color: var(--fx-t);}
+}
+@media (prefers-reduced-motion: reduce) {
+	.btn_fx::before {transition: none !important;}
+}
+
+
+/* ---------------------------------------------------------
 	HEADER
 --------------------------------------------------------- */
 .header {position: fixed; top: 0; left: 0; z-index: 100; width: 100%; color: #fff; transition: background-color .3s, color .3s, box-shadow .3s, transform .4s ease;}
