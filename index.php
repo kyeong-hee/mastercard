@@ -3,10 +3,10 @@
     include_once $_SERVER["DOCUMENT_ROOT"]."/comp/header.php"; // 공통 헤더 관리
 ?>
 
-<!-- 메인 시안 폰트 (Noto Sans KR · Afacad · 42dot Sans · IBM Plex Sans KR) -->
+<!-- 메인 시안 폰트 (Noto Sans KR · Inter · 42dot Sans · IBM Plex Sans KR) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=42dot+Sans:wght@400;500;600&family=Afacad:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=42dot+Sans:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500&family=Inter:wght@400&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/css/main.css">
 
 <div id="smooth-wrapper">
@@ -36,12 +36,30 @@
                         <source media="(max-width: 1024px)" srcset="/img/main/lineup_light1_mo.jpg">
                         <img src="/img/main/lineup_light1.jpg" alt="">
                     </picture>
+                    <!-- [모션] PC 빛 하이라이트 라인 드로잉 (참고 HTML lineDraw / lineGlow) - 1920x1080 이미지 좌표 기준 -->
+                    <svg class="light_line pc_only" viewBox="0 0 1920 1080" preserveAspectRatio="none" focusable="false">
+                        <defs>
+                            <linearGradient id="lightLineGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0" stop-color="#fff" stop-opacity=".2"/>
+                                <stop offset=".5" stop-color="#fff"/>
+                                <stop offset="1" stop-color="#b9c4ff" stop-opacity=".3"/>
+                            </linearGradient>
+                            <filter id="lightLineGlow" x="-50%" y="-10%" width="200%" height="120%">
+                                <feGaussianBlur stdDeviation="4" result="b"/>
+                                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                        </defs>
+                        <path d="M1378 62 L1074 1012" stroke="url(#lightLineGrad)" filter="url(#lightLineGlow)" pathLength="100"/>
+                    </svg>
                 </div>
                 <div class="lineup_light light2" aria-hidden="true">
                     <picture>
                         <source media="(max-width: 1024px)" srcset="/img/main/lineup_light2_mo.jpg">
                         <img src="/img/main/lineup_light2.jpg" alt="">
                     </picture>
+                </div>
+                <div class="lineup_light light3 pc_only" aria-hidden="true">
+                    <img src="/img/main/lineup_light2.jpg" alt="">
                 </div>
 
                 <!-- 02. 혜택 라인업 -->
@@ -52,8 +70,18 @@
                             <img src="/img/main/lineup_card2_mo.png" alt="The ACE Elite 카드 플레이트">
                         </div>
 
-                        <h2 class="lineup_tit">당신의 기준을 높이는,<br><b>하나의 카드</b></h2>
-                        <p class="lineup_desc">비교할 수 없는 가치로 당신의 일상에 깊이를 더하는<br><span class="ko">신한 The ACE Elite만의 </span><b>독점적 혜택 라인업</b></p>
+                        <!-- PC : 타이틀·설명 고정 / 이미지만 스크롤 -->
+                        <div class="lineup_fix">
+                            <h2 class="lineup_tit">당신의 기준을 높이는,<br><b>하나의 카드</b></h2>
+                            <p class="lineup_desc lineup_desc_l pc_only">비교할 수 없는 가치로 당신의 일상에 깊이를 더하는<br>신한 The ACE Elite만의 <b>독점적 혜택 라인업</b></p>
+                        </div>
+
+                        <!-- PC 카드 플레이트 (마이신한 포인트형 / 스카이패스형) + 설명 -->
+                        <div class="lineup_card_pc pc_only">
+                            <img src="/img/main/lineup_card01.png" alt="The ACE Elite 카드 플레이트 - 마이신한 포인트형">
+                            <img src="/img/main/lineup_card02.png" alt="The ACE Elite 카드 플레이트 - 스카이패스형">
+                        </div>
+                        <p class="lineup_desc lineup_desc_r">비교할 수 없는 가치로 당신의 일상에 깊이를 더하는<br><span class="ko">신한 The ACE Elite만의 </span><b>독점적 혜택 라인업</b></p>
 
                         <ul class="lineup_list">
                             <li class="item item1">
@@ -64,8 +92,8 @@
                                     </picture>
                                 </div>
                                 <div class="txt">
-                                    <p class="tit"><span class="pc_only">일상과 여행을 폭넓게 누리는 카드 혜택</span><span class="mo_only">일상과 여행을 아우르는 프리미엄 혜택</span></p>
-                                    <p class="desc"><span class="pc_only">최대 90만원의 기프트, 골프, 공항 라운지 등 프리미엄 라이프스타일에 딱 맞는 혜택</span><span class="mo_only">연간 기프트, 리워드, 골프 및 여행 혜택까지</span></p>
+                                    <p class="tit">일상과 여행을 아우르는 프리미엄 혜택</p>
+                                    <p class="desc"><span class="pc_only">최대 90만원의 기프트, 골프, 공항 라운지 등<br>프리미엄 라이프스타일에 딱 맞는 혜택</span><span class="mo_only">연간 기프트, 리워드, 골프 및 여행 혜택까지</span></p>
                                 </div>
                             </li>
                             <li class="item item2">
@@ -76,7 +104,7 @@
                                     </picture>
                                 </div>
                                 <div class="txt">
-                                    <p class="tit"><span class="pc_only"><span class="en">Mastercard World Elite </span>특전</span><span class="mo_only">Mastercard World Elite 특전</span></p>
+                                    <p class="tit">Mastercard World Elite 특전</p>
                                     <p class="desc"><span class="pc_only">세계 곳곳에서 누리는 프리미엄 라이프스타일<br>글로벌 다이닝, 공연, 호텔 혜택 및 숙박 우대 혜택</span><span class="mo_only">World Elite 고객만 누리는 여행, 호텔, 다이닝,<br>쇼핑영역 글로벌 혜택</span></p>
                                 </div>
                             </li>
@@ -99,16 +127,13 @@
                 <!-- 03. 프리미엄 혜택 -->
                 <section class="m_benefit" id="benefit">
                     <div class="wrap" max="1600">
-                        <h2 class="sec_tit">
-                            <span class="pc_only"><span class="ko">The ACE Elite </span>가 준비한 프리미엄 혜택</span>
-                            <span class="mo_only">The ACE Elite <b>상품 혜택</b></span>
-                        </h2>
+                        <h2 class="sec_tit">The ACE Elite <b>상품 혜택</b></h2>
 
                         <ul class="benefit_list">
                             <li class="box">
                                 <p class="tit">Annual Gift 서비스 (연 1회 / 택 1)</p>
                                 <ul class="dot_list">
-                                    <li>해외 럭셔리 호텔 90만원 이용권</li>
+                                    <li>KALPAK 여행 바우처 90만원권</li>
                                     <li>국내 특급 호텔 뷔페 30만원 이용권 3매</li>
                                     <li class="lh14">대한항공 마일리지 3만 마일 + 마이신한포인트 15만 포인트</li>
                                     <li>제휴 골프장 80만원 이용권</li>
@@ -120,7 +145,7 @@
                                     <li>
                                         마이신한 포인트형
                                         <div class="sub">
-                                            <p>국내 일시불/할부 이용금액 1.3% 적립<br>해외 일시불 이용금액 2.5% 적립</p>
+                                            <p>국내 일시불/할부 이용금액 1.3% 적립<br>해외 일시불 이용금액 2.5% 적립 </p>
                                         </div>
                                     </li>
                                     <li>
@@ -141,7 +166,7 @@
                             <li class="box">
                                 <p class="tit">Sweet Celebration 서비스</p>
                                 <ul class="dot_list">
-                                    <li>국내 제휴 특급호텔 베이커리 Cake 5만원 현장 할인</li>
+                                    <li>국내 제휴 특급호텔 베이커리 홀케이크 5만원 할인</li>
                                 </ul>
                             </li>
                             <li class="box">
@@ -154,14 +179,14 @@
                             <li class="box">
                                 <p class="tit">공항라운지 서비스</p>
                                 <ul class="dot_list">
-                                    <li>THE LOUNGE (공항라운지) 서비스 무료 이용</li>
+                                    <li>THE LOUNGE 전세계 공항라운지 무료 이용 (월 4회/연 20회)</li>
                                 </ul>
                             </li>
                         </ul>
 
                         <p class="benefit_note">※ 전월 이용금액 기준/신한카드 The ACE Elite 서비스 적용 기준으로 <br class="mo_only">제공됩니다.</p>
 
-                        <div class="btn_wrap mo_only">
+                        <div class="btn_wrap">
                             <a href="#none" class="btn_more">상품 혜택 확인하기 <i class="xi-angle-right-min" aria-hidden="true"></i></a>
                         </div>
                     </div>
@@ -186,11 +211,10 @@
                                     </picture>
                                 </div>
                                 <div class="slide_txt">
-                                    <p class="count mo_only">01 / 04</p>
                                     <p class="tit">다이닝 특전</p>
-                                    <p class="desc"><span class="pc_only">국경없이 즐기는 혜택</span><span class="mo_only">국내외 파인다이닝 레스토랑 할인 및 예약,<br>호텔 미식 혜택 제공</span></p>
+                                    <p class="desc">국내외 파인다이닝 레스토랑 할인 및 예약,<br class="mo_only"> 호텔 미식 혜택 제공</p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line pc_only">자세히 보기 <i class="xi-plus-circle" aria-hidden="true"></i></a>
+                                        <a href="#none" class="btn_line pc_only">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                         <a href="#none" class="btn_pill on mo_only">공통서비스</a>
                                         <a href="#none" class="btn_pill mo_only">선택서비스</a>
                                     </div>
@@ -205,11 +229,10 @@
                                     </picture>
                                 </div>
                                 <div class="slide_txt">
-                                    <p class="count mo_only">02 / 04</p>
-                                    <p class="tit">엔터테인먼트 특전</p>
-                                    <p class="desc"></p>
+                                    <p class="tit">프리미엄 엔터테인먼트 혜택</p>
+                                    <p class="desc">최고의 공연, 스포츠 경기를 가장 빠르게, 누구보다 먼저</p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line pc_only">자세히 보기 <i class="xi-plus-circle" aria-hidden="true"></i></a>
+                                        <a href="#none" class="btn_line pc_only">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                         <a href="#none" class="btn_pill on mo_only">공통서비스</a>
                                         <a href="#none" class="btn_pill mo_only">선택서비스</a>
                                     </div>
@@ -223,11 +246,10 @@
                                     </picture>
                                 </div>
                                 <div class="slide_txt">
-                                    <p class="count mo_only">03 / 04</p>
-                                    <p class="tit">호텔 특전</p>
-                                    <p class="desc"></p>
+                                    <p class="tit">더 특별한 여정을 완성하는<br> 글로벌 호텔 혜택</p>
+                                    <p class="desc">무료 숙박부터 글로벌 호텔 멤버십까지, <br/> World Elite 회원만의 프리미엄 혜택</p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line pc_only">자세히 보기 <i class="xi-plus-circle" aria-hidden="true"></i></a>
+                                        <a href="#none" class="btn_line pc_only">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                         <a href="#none" class="btn_pill on mo_only">공통서비스</a>
                                         <a href="#none" class="btn_pill mo_only">선택서비스</a>
                                     </div>
@@ -241,11 +263,10 @@
                                     </picture>
                                 </div>
                                 <div class="slide_txt">
-                                    <p class="count mo_only">04 / 04</p>
-                                    <p class="tit">아울렛 특전</p>
-                                    <p class="desc"></p>
+                                    <p class="tit">프리미엄 아울렛 혜택</p>
+                                    <p class="desc">비스터 컬렉션·맥아더글렌 아울렛에서<br/> 누리는 World Elite 전용 할인 혜택 </p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line pc_only">자세히 보기 <i class="xi-plus-circle" aria-hidden="true"></i></a>
+                                        <a href="#none" class="btn_line pc_only">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                         <a href="#none" class="btn_pill on mo_only">공통서비스</a>
                                         <a href="#none" class="btn_pill mo_only">선택서비스</a>
                                     </div>
@@ -254,8 +275,7 @@
                         </div>
                     </div>
 
-                    <!-- PC 카운트 / 하단 4분할 라인 -->
-                    <p class="we_count pc_only" aria-hidden="true"><span>01</span> / <span>02</span> / <span>03</span> / <span>04</span></p>
+                    <!-- PC 이미지 하단 4분할 라인 -->
                     <div class="we_bar pc_only">
                         <button type="button" class="on" aria-label="01 다이닝 보기"></button>
                         <button type="button" aria-label="02 엔터테인먼트 보기"></button>
@@ -268,12 +288,15 @@
             <!-- 05. 시즈널 혜택 -->
             <section class="m_season" id="seasonal">
                 <div class="wrap" max="1600">
-                    <h2 class="sec_tit">시즈널 혜택</h2>
+                    <div class="season_top">
+                        <h2 class="sec_tit">시즈널 혜택</h2>
+                        <a href="#none" class="btn_more pc_only">시즈널 혜택 확인하기 <i class="xi-angle-right-min" aria-hidden="true"></i></a>
+                    </div>
 
                     <!-- 국내 다이닝 -->
                     <div class="season_head">
                         <p class="tit"><span class="mark">·•</span> 국내 다이닝 혜택</p>
-                        <p class="desc dining"><span class="pc_only">신한카드가 선정한 파인다이닝 대상 | 2인 코스 주문시 1인 무료</span><span class="mo_only"><span class="dim">신한ACE 프리미엄 고객을 위한 파인다이닝 레스토랑</span><br>프리미엄 다이닝 1+1 제공 (런치 및 석식)</span></p>
+                        <p class="desc dining"><span class="dim">신한ACE 프리미엄 고객을 위한 파인다이닝 레스토랑<span class="pc_only">&nbsp; | &nbsp;</span></span><br class="mo_only">프리미엄 다이닝 1+1 제공 (런치 및 석식)</p>
                     </div>
 
                     <div class="dining_area">
@@ -313,7 +336,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <span class="drag_cursor" aria-hidden="true"><img src="/img/main/drag.png" alt=""></span>
+                        <span class="drag_cursor" aria-hidden="true">Drag</span>
                     </div>
 
                     <hr class="season_line">
@@ -335,15 +358,15 @@
                         <li class="golf2" tabindex="0">
                             <div class="img"><picture><source media="(max-width: 1024px)" srcset="/img/main/golf02_mo.jpg"><img src="/img/main/golf02.jpg" alt=""></picture></div>
                             <div class="txt">
-                                <p class="tit"><span class="pc_only">연습 타석 추가 증정</span><span class="mo_only">60타석 구매 시 30타석 추가 증정</span></p>
-                                <div class="desc"><div><p class="strong pc_only">60타석 구매 시 30타석 추가 증정</p><p class="dim">미사용분 잔여 타석 이월 가능</p></div></div>
+                                <p class="tit">60타석 구매 시 30타석 추가 증정</p>
+                                <div class="desc"><div><p class="strong">미사용분 잔여 타석 이월 가능</p></div></div>
                             </div>
                         </li>
                         <li class="golf3" tabindex="0">
                             <div class="img"><picture><source media="(max-width: 1024px)" srcset="/img/main/golf03_mo.jpg"><img src="/img/main/golf03.jpg" alt=""></picture></div>
                             <div class="txt">
-                                <p class="tit"><span class="pc_only">랩퍼터 피팅 시뮬레이션</span><span class="mo_only">랩퍼터 피팅 시 시뮬레이션 제공</span></p>
-                                <div class="desc"><div><p class="strong"><span class="pc_only">전문가의 랩 퍼터 피팅</span><span class="mo_only">전문가의 랩 퍼터 제공</span></p></div></div>
+                                <p class="tit">랩퍼터 피팅 시뮬레이션 제공</p>
+                                <div class="desc"><div><p class="strong">전문가의 랩 퍼터 제공</p></div></div>
                             </div>
                         </li>
                     </ul>
@@ -359,13 +382,14 @@
                 <div class="issue_bg" aria-hidden="true"></div>
                 <div class="wrap issue_inner" max="1600">
                     <h2 class="issue_tit">
-                        <span class="pc_only">THE ACE Elite만의 <b>특별한 혜택</b>과<br>프라이빗 라이프스타일을 소유할 시간.</span>
+                        <span class="pc_only">Live Beyond Ordinary.<br>The ACE Elite로 완성하는 특별한 일상</span>
                         <span class="mo_only">THE ACE Elite만의<br><b>특별한 혜택</b>과<br>프라이빗 라이프스타일을<br>소유할 시간.</span>
                     </h2>
 
                     <div class="issue_card">
                         <img src="/img/main/card_myshinhan.png" alt="The ACE Elite 메탈 플레이트 - 마이신한 포인트형" class="on" data-card="myshinhan">
                         <img src="/img/main/card_skypass.png" alt="The ACE Elite 메탈 플레이트 - 스카이패스형" data-card="skypass">
+                        <span class="card_shine" aria-hidden="true"></span><!-- [모션] PC 마우스 오버 시 테두리 은색 빛 / 표면 반사광 -->
                     </div>
 
                     <div class="issue_toggle" role="group" aria-label="카드 플레이트 선택">

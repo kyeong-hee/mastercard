@@ -139,3 +139,6 @@
         <img src="/img/common/ico_qm_close.svg" alt="">
     </button>
 </div>
+
+<!-- 공통 레이아웃 스크립트 (헤더 스크롤 숨김 등) -->
+<script src="/js/layout.js"></script>

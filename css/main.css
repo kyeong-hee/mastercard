@@ -1,11 +1,11 @@
 /* =========================================================
 	MAIN (/index.php)
-	- PC  : 메인시안 1920 (12:4)  → 1025px 이상
-	- MO  : 메인시안 375 (15:1190) → 1024px 이하
+	- PC  : 메인시안 1920 (46:1919 마스터카드_main_C_수정03) → 1025px 이상
+	- MO  : 메인시안 375 (15:1190 마스터카드_main_C_수정03_MO) → 1024px 이하
 	- 수치는 피그마 시안 값 그대로 (작업 규칙 : /_main_publishing_rule.md)
 ========================================================= */
 
-.main {--f-noto: 'Noto Sans KR', sans-serif; --f-suit: 'SUIT', 'Noto Sans KR', sans-serif; --f-pre: 'Pretendard', sans-serif; --f-afa: 'Afacad', 'Noto Sans KR', sans-serif; --f-42: '42dot Sans', 'Noto Sans KR', sans-serif; --f-ibm: 'IBM Plex Sans KR', sans-serif;}
+.main {--f-noto: 'Noto Sans KR', sans-serif; --f-suit: 'SUIT', 'Noto Sans KR', sans-serif; --f-pre: 'Pretendard', sans-serif; --f-inter: 'Inter', 'Noto Sans KR', sans-serif; --f-42: '42dot Sans', 'Noto Sans KR', sans-serif; --f-ibm: 'IBM Plex Sans KR', sans-serif;}
 .main, .main * {box-sizing: border-box;}
 .main {overflow: hidden; color: #fff;}
 .main img {display: block; max-width: 100%;}
@@ -13,10 +13,12 @@
 
 @media screen and (min-width:1025px) {
 	.main .mo_only {display: none !important;}
-	/* 서체 혼용(SUIT+Noto) 줄높이 보정 : 시안 텍스트 박스 높이 고정 */
+	/* 서체 혼용 줄높이 보정 : 시안 텍스트 박스 높이 고정 */
 	.m_benefit .sec_tit {height: 50.4px;}
-	.m_issue .issue_tit {height: 140.8px;}
+	.m_issue .issue_tit {height: 152.4px;}
 	.m_season .dining_swiper .swiper-slide {height: 317px;}
+	/* 02 첫 번째 배경 빛 : 시안 opacity 50% */
+	.m_lineup_wrap .light1 {opacity: .5;}
 }
 @media screen and (max-width:1024px) {
 	.main .pc_only {display: none !important;}
@@ -24,6 +26,14 @@
 
 /* 공통 섹션 타이틀 (03 · 05) */
 .main .sec_tit {font-family: var(--f-suit); font-size: 36px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em;}
+
+/* 공통 라인 버튼 (상품 혜택 확인하기 · 시즈널 혜택 확인하기) */
+.main .btn_wrap {display: flex; justify-content: center;}
+.main .btn_more {display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 19px; border: 1px solid #fff; border-radius: 30px; font-family: var(--f-pre); font-size: 16px; line-height: 1.4; font-weight: 500; letter-spacing: -0.02em; white-space: nowrap; transition: background-color .3s, color .3s;}
+.main .btn_more i {font-size: 16px;}
+@media (hover: hover) {
+	.main .btn_more:hover {background-color: #fff; color: #000;}
+}
 
 
 /* ---------------------------------------------------------
@@ -38,86 +48,101 @@
 
 
 /* ---------------------------------------------------------
-	02~03. 혜택 라인업 + 프리미엄 혜택 (공통 배경)
+	02~03. 혜택 라인업 + 상품 혜택 (공통 배경)
 --------------------------------------------------------- */
 .m_lineup_wrap {position: relative; background-color: #000; overflow: hidden;}
 .m_lineup_wrap .lineup_light {position: absolute; left: 0; width: 100%; pointer-events: none;}
 .m_lineup_wrap .lineup_light img {width: 100%;}
 .m_lineup_wrap .light1 {top: 0;}
 .m_lineup_wrap .light2 {top: 1597px;}
+.m_lineup_wrap .light3 {top: 2656px;}
+
+/* [모션] 광선 펼침 : 사선 라인 위치(마스크 축 약 62%)에서 오른쪽으로 마스크가 열리며 광선이 퍼짐
+   --draw : 마스크 경계 위치(0.62 → 1.15), 경계 12% 구간은 부드럽게 페이드 / JS에서 세팅 후 애니메이션, 최종 상태 = 시안 */
+.m_lineup_wrap .lineup_light picture {display: block;}
+.m_lineup_wrap .lineup_light img {-webkit-mask-image: linear-gradient(108deg, #000 calc(var(--draw, 1.15) * 100% - 12%), transparent calc(var(--draw, 1.15) * 100%)); mask-image: linear-gradient(108deg, #000 calc(var(--draw, 1.15) * 100% - 12%), transparent calc(var(--draw, 1.15) * 100%));}
+.m_lineup_wrap .light_line {position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none;}
+.m_lineup_wrap .light_line path {fill: none; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; opacity: .9;}
 
 /* 02. 혜택 라인업 */
-.m_lineup {position: relative; z-index: 1; height: 2417px;}
+.m_lineup {position: relative; z-index: 1; height: 2699px;}
 .m_lineup .lineup_inner {position: relative; height: 100%;}
-.m_lineup .lineup_tit {position: absolute; left: -10px; top: 311px; font-family: var(--f-suit); font-size: 60px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap;}
+/* [모션] PC 타이틀·설명 고정 영역 (JS pin) - 시안 타이틀 top 252 / 설명 top 469 (섹션 기준) */
+.m_lineup .lineup_fix {position: absolute; left: 0; top: 0; z-index: 1; width: 100%; height: 100vh; pointer-events: none; transition: opacity .5s;}
+.m_lineup.is_out .lineup_fix {opacity: 0;}
+.m_lineup .lineup_tit {position: absolute; left: 0; top: 252px; font-family: var(--f-suit); font-size: min(70px, 4.375vw); line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap;}
 .m_lineup .lineup_tit b {font-weight: 600;}
-.m_lineup .lineup_desc {position: absolute; right: 8px; top: 878px; font-family: var(--f-noto); font-size: 18px; line-height: 1.6; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap;}
-.m_lineup .lineup_desc b {font-family: var(--f-suit); font-weight: 600;}
+.m_lineup .lineup_desc {font-family: var(--f-suit); font-size: 18px; line-height: 1.6; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap;}
+.m_lineup .lineup_desc b {font-weight: 600;}
+.m_lineup .lineup_desc_l {position: absolute; left: -3px; top: 469px; line-height: 30px;}
+.m_lineup .lineup_desc_r {position: absolute; right: 0; top: 862px; width: 368px;}
 
-.m_lineup .item {position: absolute; width: 38.75%;}
+/* PC 카드 플레이트 : 시안 342 x 541 (1600 기준 21.375%) / 간격 38 */
+.m_lineup .lineup_card_pc {position: absolute; right: 0; top: 258px; display: flex; gap: 5.263%; width: 45.125%;}
+.m_lineup .lineup_card_pc img {flex: 1; min-width: 0; aspect-ratio: 342 / 541; object-fit: cover;}
+
+.m_lineup .item {position: absolute; z-index: 2; width: 38.75%;}
 .m_lineup .item .img {overflow: hidden;}
 .m_lineup .item .img img {width: 100%; height: 100%; object-fit: cover;}
-.m_lineup .item .txt {max-width: 520px; font-family: var(--f-afa); letter-spacing: -0.48px; line-height: 1.8;}
-.m_lineup .item .tit {font-size: 27px; font-weight: 600;}
-.m_lineup .item .tit .en {font-size: 29px;}
-.m_lineup .item .desc {font-size: 24px; font-weight: 400; color: rgba(255, 255, 255, .7);}
+.m_lineup .item .txt {margin-top: 15px; font-family: var(--f-suit); letter-spacing: -0.02em; white-space: nowrap;}
+.m_lineup .item .tit {font-size: 26px; line-height: 1.8; font-weight: 700;}
+.m_lineup .item2 .tit {font-weight: 600;}
+.m_lineup .item .desc {margin-top: 7px; font-size: 18px; line-height: 30px; font-weight: 400;}
 
-.m_lineup .item1 {left: -0.625%; top: 640px;}
+.m_lineup .item1 {left: 0; top: 902px;}
 .m_lineup .item1 .img {width: 58.065%; aspect-ratio: 360 / 320;}
-.m_lineup .item1 .txt {margin-top: 15px;}
-.m_lineup .item2 {left: 49.375%; top: 1142px;}
-.m_lineup .item2 .img {width: 100%; aspect-ratio: 620 / 240; opacity: .6;}
-.m_lineup .item2 .txt {margin: 33px 0 0 16px;}
-.m_lineup .item3 {left: 9.375%; top: 1588px;}
+.m_lineup .item2 {left: 50%; top: 1404px;}
+.m_lineup .item2 .img {width: 100%; aspect-ratio: 620 / 240;}
+.m_lineup .item3 {left: 10%; top: 1850px;}
 .m_lineup .item3 .img {width: 61.29%; aspect-ratio: 380 / 500;}
-.m_lineup .item3 .txt {margin: 31px 0 0 10px;}
 
-/* 03. 프리미엄 혜택 */
-.m_benefit {position: relative; z-index: 1; padding-bottom: 194px;}
-.m_benefit .sec_tit .ko {font-family: var(--f-noto); font-weight: 400;}
-.m_benefit .benefit_list {display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 51.6px;}
-.m_benefit .box {min-height: 340px; padding: 30px 50px; background-color: #fff; color: #000;}
+/* 03. 상품 혜택 */
+.m_benefit {position: relative; z-index: 1; padding-bottom: 150px;}
+.m_benefit .sec_tit {font-weight: 400;}
+.m_benefit .sec_tit b {font-weight: 600;}
+.m_benefit .benefit_list {display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 39.6px;}
+.m_benefit .box {min-height: 340px; padding: 29px 20px 29px 44px; border: 1px solid rgba(255, 255, 255, .18); background-color: rgba(17, 17, 17, .7); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); color: #fff;}
 .m_benefit .box .tit {font-family: var(--f-suit); font-size: 26px; line-height: 1.6; font-weight: 600; letter-spacing: -0.02em;}
 .m_benefit .box .dot_list {margin-top: 20.4px;}
 .m_benefit .box:nth-child(n+4) .dot_list {margin-top: 15.4px;}
 
-.m_benefit .dot_list > li {position: relative; padding-left: 15px; font-family: var(--f-noto); font-size: 16px; line-height: 1.6; font-weight: 500; letter-spacing: -0.02em; color: #252525;}
-.m_benefit .dot_list > li::before {content: ''; position: absolute; left: 0; top: 10.3px; width: 5px; height: 5px; border-radius: 50%; background-color: #252525;}
+/* 리스트 점 : 시안 텍스트 '· ' (두 줄 시 들여쓰기 유지) */
+.m_benefit .dot_list > li {position: relative; padding-left: 14px; font-family: var(--f-noto); font-size: 18px; line-height: 1.6; font-weight: 500; letter-spacing: -0.02em; color: rgba(255, 255, 255, .9);}
+.m_benefit .dot_list > li::before {content: '·'; position: absolute; left: 0; top: 0;}
 .m_benefit .dot_list > li + li {margin-top: 7px;}
-.m_benefit .dot_list > li.lh14 {line-height: 1.4;}
-.m_benefit .dot_list > li.lh14::before {top: 7.5px;}
-.m_benefit .dot_list .sub {margin-top: 10px; font-size: 14px; line-height: 1.6; color: rgba(37, 37, 37, .8);}
+.m_benefit .dot_list .sub {margin-top: 7.2px; padding-left: 1px; font-family: var(--f-suit); font-size: 14px; line-height: 1.6; font-weight: 500; letter-spacing: -0.02em; color: rgba(255, 255, 255, .7);}
 .m_benefit .dot_list .sub.lh14 {line-height: 1.4;}
 .m_benefit .dot_list .sub p + p {margin-top: 10.8px;}
 .m_benefit .dot_list > li:has(.sub) + li {margin-top: 19.2px;}
 
-.m_benefit .benefit_note {margin-top: 20px; text-align: right; font-family: var(--f-noto); font-size: 16px; line-height: 1.6; font-weight: 400; letter-spacing: -0.02em; opacity: .7;}
+.m_benefit .benefit_note {margin-top: 20px; text-align: right; font-family: var(--f-suit); font-size: 16px; line-height: 1.6; font-weight: 400; letter-spacing: -0.02em; opacity: .7;}
+.m_benefit .btn_wrap {margin-top: 40.4px;}
 
 
 /* ---------------------------------------------------------
 	04. WORLD ELITE 등급 혜택 (큐레이션 롤링)
 --------------------------------------------------------- */
-.m_we {background-color: #0b0c0d; padding: 100px 0 90px;}
+.m_we {background-color: #0b0c0d; padding: 100px 0 96px;}
 .m_we .we_inner {position: relative;}
-.m_we .we_fix {position: absolute; left: 0; top: 0; z-index: 2; width: 471px;}
-.m_we .we_fix .tit {font-family: var(--f-suit); font-size: 16px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em;}
-.m_we .we_fix .desc {margin-top: 12.6px; font-family: var(--f-noto); font-size: 16px; line-height: 1.6; font-weight: 400; letter-spacing: -0.02em; opacity: .7;}
+.m_we .we_fix {position: absolute; left: 0; top: 0; z-index: 2; width: 600px;}
+.m_we .we_fix .tit {font-family: var(--f-suit); font-size: 18px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em;}
+.m_we .we_fix .desc {margin-top: 9.8px; font-family: var(--f-suit); font-size: 18px; line-height: 30px; font-weight: 400; letter-spacing: -0.02em; opacity: .7;}
 
 .m_we .we_swiper {width: 100%;}
 .m_we .swiper-slide {position: relative; display: flex; justify-content: flex-end;}
 .m_we .slide_img {width: 49%; aspect-ratio: 1 / 1; overflow: hidden; background-color: #d9d9d9;}
 .m_we .slide_img img {width: 100%; height: 100%; object-fit: cover; object-position: center bottom;}
-.m_we .slide_txt {position: absolute; left: 0; bottom: 90px; width: 469px;}
-.m_we .slide_txt .tit {font-family: var(--f-noto); font-size: 40px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em;}
-.m_we .slide_txt .desc {min-height: 28px; margin-top: 15px; font-family: var(--f-noto); font-size: 20px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; opacity: .7;}
-.m_we .slide_txt .btns {display: flex; margin-top: 51px;}
-.m_we .btn_line {display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 33px; padding: 7px 15px; border: 1px solid #fff; border-radius: 30px; font-family: var(--f-noto); font-size: 14px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; transition: background-color .3s, color .3s;}
-.m_we .btn_line i {font-size: 14px;}
-.m_we .btn_line:hover {background-color: #fff; color: #000;}
-
-.m_we .we_count {position: absolute; left: 0; bottom: 288px; z-index: 2; font-family: var(--f-noto); font-size: 14px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; color: rgba(255, 255, 255, .3);}
-.m_we .we_count span {transition: color .3s;}
-.m_we .we_count span.on {color: #fff;}
+/* 텍스트 영역 : 시안 469px(01 다이닝 기준) → 02~04 문구가 시안 줄바꿈대로 나오도록 이미지 왼쪽 여백(51%) - 40px 까지 확장 / 폰트·이미지 크기는 시안 그대로 */
+.m_we .slide_txt {position: absolute; left: 0; bottom: 0; width: calc(51% - 40px); word-break: keep-all;}
+.m_we .slide_txt .tit {font-family: var(--f-pre); font-size: 54px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em;}
+.m_we .slide_txt .desc {min-height: 28px; margin-top: 15px; font-family: var(--f-pre); font-size: 20px; line-height: 1.4; font-weight: 500; letter-spacing: -0.02em; opacity: .7;}
+.m_we .slide_txt .btns {display: flex; margin-top: 70.4px;}
+.m_we .btn_line {display: inline-flex; align-items: center; justify-content: center; gap: 5px; height: 44px; padding: 0 20px; border: 1px solid #fff; border-radius: 31px; font-family: var(--f-noto); font-size: 16px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; transition: background-color .3s, color .3s;}
+.m_we .btn_line img {width: 13px; height: 26px; transition: filter .3s;}
+@media (hover: hover) {
+	.m_we .btn_line:hover {background-color: #fff; color: #000;}
+	.m_we .btn_line:hover img {filter: invert(1);}
+}
 
 .m_we .we_bar {position: absolute; right: 0; bottom: 38px; z-index: 2; display: flex; gap: 1.148%; width: 49%; padding: 0 5.61% 0 6.76%;}
 .m_we .we_bar button {position: relative; flex: 1; height: 3px; background-color: #828287; transition: background-color .3s;}
@@ -128,23 +153,25 @@
 /* ---------------------------------------------------------
 	05. 시즈널 혜택
 --------------------------------------------------------- */
-.m_season {background-color: #14161c; padding: 170px 0 200px;}
+.m_season {background-color: #14161c; padding: 180px 0 200px;}
+.m_season .season_top {display: flex; align-items: center; justify-content: space-between; gap: 20px;}
 
-.m_season .season_head {margin-top: 71.6px;}
+.m_season .season_head {margin-top: 79.6px;}
 .m_season .season_head .tit {display: flex; align-items: center; gap: 10px; font-family: var(--f-suit); font-size: 24px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap;}
-.m_season .season_head .desc {margin-top: 5px; font-family: var(--f-noto); font-size: 20px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; color: rgba(255, 255, 255, .7);}
-.m_season .season_head .desc.dining {font-weight: 700;}
+.m_season .season_head .desc {margin-top: 5px; font-family: var(--f-suit); font-size: 20px; line-height: 1.4; font-weight: 400; letter-spacing: -0.02em; color: rgba(255, 255, 255, .7);}
+.m_season .season_head .desc.dining {font-weight: 500; color: #fff;}
+.m_season .season_head .desc .dim {color: rgba(255, 255, 255, .7);}
 
 /* 다이닝 리스트 (드래그) */
-.m_season .dining_area {position: relative; margin-top: 30px;}
+.m_season .dining_area {position: relative; margin-top: 30.4px;}
 .m_season .dining_swiper {width: calc(50vw + 50%); margin: 0; -webkit-mask-image: linear-gradient(to right, #000 77.39%, transparent 100%); mask-image: linear-gradient(to right, #000 77.39%, transparent 100%);}
 .m_season .dining_swiper .swiper-slide {width: 380px;}
 .m_season .dining_swiper .img {height: 280px; overflow: hidden;}
 .m_season .dining_swiper .img img {width: 100%; height: 100%; object-fit: cover; pointer-events: none;}
-.m_season .dining_swiper .name {margin-top: 15px; font-family: var(--f-noto); font-size: 18px; line-height: 1.4; font-weight: 500; letter-spacing: -0.02em; white-space: nowrap;}
+.m_season .dining_swiper .name {margin-top: 15px; font-family: var(--f-suit); font-size: 18px; line-height: 1.4; font-weight: 500; letter-spacing: -0.02em; white-space: nowrap;}
 
-.m_season .drag_cursor {position: absolute; left: 0; top: 0; z-index: 3; width: 89px; height: 89px; margin: -44.5px 0 0 -44.5px; border-radius: 50%; overflow: hidden; pointer-events: none; opacity: 0; transform: scale(.6); transition: opacity .3s, transform .3s;}
-.m_season .drag_cursor img {width: 100%; height: 100%;}
+/* DRAG 커서 : 시안 80 원형 (흰 배경 · 검정 텍스트) */
+.m_season .drag_cursor {position: absolute; left: 0; top: 0; z-index: 3; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; margin: -40px 0 0 -40px; border: 1px solid #fff; border-radius: 50%; background-color: #fff; font-family: var(--f-suit); font-size: 14px; line-height: 1.6; font-weight: 600; letter-spacing: -0.02em; color: #000; pointer-events: none; opacity: 0; transform: scale(.6); transition: opacity .3s, transform .3s;}
 .m_season .dining_area.drag_on .drag_cursor {opacity: 1; transform: scale(1);}
 @media (hover: hover) and (pointer: fine) {
 	.m_season .dining_swiper {cursor: none;}
@@ -153,89 +180,107 @@
 .m_season .season_line {height: 0; margin: 80px 0 0; border: 0; border-top: 1px solid rgba(255, 255, 255, .1);}
 .m_season .season_line + .season_head {margin-top: 80px;}
 
-/* 골프 리스트 (hover 시 설명 노출) */
-.m_season .golf_list {display: flex; justify-content: space-between; margin-top: 30px;}
+/* 골프 리스트 : 텍스트 상시 노출 / hover 시 하단 그라데이션(시안 hover effect) */
+.m_season .golf_list {display: flex; justify-content: space-between; margin-top: 30.4px;}
 .m_season .golf_list > li {position: relative; width: 32.5%; aspect-ratio: 520 / 380; overflow: hidden;}
 .m_season .golf_list .img {position: absolute; inset: 0;}
 .m_season .golf_list .img img {width: 100%; height: 100%; object-fit: cover;}
 .m_season .golf_list > li::after {content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 66.316%, #000 100%); opacity: 0; transition: opacity .4s;}
-.m_season .golf_list .txt {position: absolute; left: 30px; right: 30px; bottom: 30px; z-index: 1;}
-.m_season .golf_list .tit {font-family: var(--f-suit); font-size: 26px; line-height: 1.6; font-weight: 600; letter-spacing: -0.02em;}
-.m_season .golf_list .desc {display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s;}
-.m_season .golf_list .desc > div {overflow: hidden;}
-.m_season .golf_list .desc p {font-size: 18px; line-height: 1.6; letter-spacing: -0.02em;}
-.m_season .golf_list .desc p:first-child {padding-top: 20.4px;}
-.m_season .golf_list .desc .strong {font-family: var(--f-suit); font-weight: 600;}
-.m_season .golf_list .desc .dim {font-family: var(--f-noto); font-weight: 500; color: rgba(255, 255, 255, .5);}
+.m_season .golf_list .txt {position: absolute; left: 40px; right: 30px; bottom: 32px; z-index: 1;}
+.m_season .golf_list > li.golf2 .txt {bottom: 40px;}
+.m_season .golf_list > li.golf3 .txt {bottom: 30px;}
+.m_season .golf_list .tit {font-family: var(--f-suit); font-size: 24px; line-height: 1.6; font-weight: 600; letter-spacing: -0.02em;}
+.m_season .golf_list .desc p {font-family: var(--f-suit); font-size: 18px; line-height: 26px; font-weight: 600; letter-spacing: -0.02em;}
+.m_season .golf_list .desc p:first-child {padding-top: 10px;}
+.m_season .golf_list .desc .dim {font-size: 14px; color: rgba(255, 255, 255, .8);}
 .m_season .golf_list > li:hover::after,
 .m_season .golf_list > li:focus-within::after {opacity: 1;}
-.m_season .golf_list > li:hover .desc,
-.m_season .golf_list > li:focus-within .desc {grid-template-rows: 1fr;}
+/* [모션] PC 마우스 환경 : 기본은 타이틀만 노출 → hover·키보드 포커스 시 설명이 하단 그림자와 함께 나타남
+   (설명 높이 0 → auto 를 grid-template-rows 로 전환해 타이틀이 자연스럽게 위로 밀려 올라감)
+   터치·MO 는 hover 가 없으므로 설명 상시 노출 유지 */
+@media (hover: hover) and (min-width: 1025px) {
+	.m_season .golf_list .desc {display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .4s, opacity .4s;}
+	.m_season .golf_list .desc > div {min-height: 0; overflow: hidden;}
+	.m_season .golf_list > li:hover .desc,
+	.m_season .golf_list > li:focus-within .desc {grid-template-rows: 1fr; opacity: 1;}
+}
 
 
 /* ---------------------------------------------------------
 	06. 발급
 --------------------------------------------------------- */
-.m_issue {position: relative; padding: 191px 0 100px; background-color: #101424;}
+.m_issue {position: relative; padding: 191px 0 105px; background-color: #101424;}
 .m_issue .issue_bg {position: absolute; inset: 0; background: url(/img/main/issue_bg.jpg) no-repeat center / cover;}
 .m_issue .issue_inner {position: relative; display: flex; flex-direction: column; align-items: center;}
 
-.m_issue .issue_tit {position: relative; left: 15.5px; text-align: center; font-family: var(--f-noto); font-size: 44px; line-height: 1.6; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap;}
+.m_issue .issue_tit {position: relative; left: 15px; text-align: center; font-family: var(--f-inter); font-size: 54px; line-height: 76.2px; font-weight: 400; letter-spacing: -0.4px; white-space: nowrap;}
 .m_issue .issue_tit b {font-family: var(--f-suit); font-weight: 600;}
 
-.m_issue .issue_card {position: relative; width: 253.61px; height: 400px; margin-top: 49.2px; box-shadow: 0 0 20px rgba(0, 0, 0, .2);}
+.m_issue .issue_card {position: relative; width: 253.61px; height: 400px; margin-top: 37.6px; box-shadow: 0 0 20px rgba(0, 0, 0, .2);}
 .m_issue .issue_card img {position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s;}
 .m_issue .issue_card img.on {opacity: 1;}
+/* [모션] PC 마우스 오버 : 커서 위치에 따라 카드 3D 기울기(JS) + 테두리 은색 빛(::before) · 표면 반사광(::after)
+   --shine-angle : 커서 방향 각도 / --shine-x, --shine-y : 커서 위치 (JS 갱신) */
+.m_issue .issue_card {will-change: transform;}
+.m_issue .issue_card .card_shine {position: absolute; inset: 0; z-index: 1; border-radius: 12px; pointer-events: none; opacity: 0; transition: opacity .4s;}
+.m_issue .issue_card .card_shine::before {content: ''; position: absolute; inset: 0; padding: 2px; border-radius: inherit; background: conic-gradient(from var(--shine-angle, 0deg), rgba(255, 255, 255, 0) 0deg, rgba(255, 255, 255, .95) 28deg, rgba(255, 255, 255, 0) 75deg, rgba(255, 255, 255, 0) 175deg, rgba(255, 255, 255, .55) 205deg, rgba(255, 255, 255, 0) 245deg); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); filter: drop-shadow(0 0 3px rgba(255, 255, 255, .8));}
+.m_issue .issue_card .card_shine::after {content: ''; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(circle at var(--shine-x, 50%) var(--shine-y, 50%), rgba(255, 255, 255, .3), rgba(255, 255, 255, 0) 55%); mix-blend-mode: screen;}
+.m_issue .issue_card.is_tilt .card_shine {opacity: 1;}
 
-.m_issue .issue_toggle {position: relative; display: flex; width: 207px; height: 34px; margin-top: 30px;}
-.m_issue .issue_toggle::before {content: ''; position: absolute; inset: 0; border: 1px solid #fff; border-radius: 30px; pointer-events: none;}
-.m_issue .issue_toggle button {position: relative; z-index: 1; height: 34px; padding: 7px 15px; border-radius: 30px; font-family: var(--f-pre); font-size: 14px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em; color: #fff; white-space: nowrap; transition: background-color .3s, color .3s;}
-.m_issue .issue_toggle button:first-child {width: 117px;}
-.m_issue .issue_toggle button:last-child {width: 90px;}
+/* 카드 플레이트 토글 (세그먼트) */
+.m_issue .issue_toggle {position: relative; display: flex; margin-top: 22px; padding: 4px; border: 1px solid rgba(255, 255, 255, .12); border-radius: 999px; background-color: #262629; overflow: hidden;}
+.m_issue .issue_toggle button {position: relative; z-index: 1; padding: 9px 18px; border-radius: 999px; font-family: var(--f-pre); font-size: 15px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em; color: #aaaab0; white-space: nowrap; transition: background-color .3s, color .3s;}
 .m_issue .issue_toggle button.on {background-color: #fff; color: #000;}
 
-.m_issue .issue_apply {position: absolute; left: calc(50% + 129px); top: 320px; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; border: 1px solid #fff; border-radius: 50%; background-color: rgba(255, 255, 255, .1); box-shadow: 0 0 20px rgba(255, 255, 255, .15); text-align: center; font-family: var(--f-suit); font-size: 16px; line-height: 1.6; font-weight: 600; letter-spacing: -0.02em; transition: background-color .3s;}
+.m_issue .issue_apply {position: absolute; left: calc(50% + 92px); top: 317px; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; border: 1px solid #fff; border-radius: 50%; background-color: rgba(255, 255, 255, .1); box-shadow: 0 0 20px rgba(255, 255, 255, .15); text-align: center; font-family: var(--f-suit); font-size: 16px; line-height: 1.6; font-weight: 600; letter-spacing: -0.02em; transition: background-color .3s;}
 .m_issue .issue_apply .s {font-size: 14px;}
 .m_issue .issue_apply:hover {background-color: rgba(255, 255, 255, .2);}
+/* [모션] PC 마우스 : 섹션 전체(토글 제외)에서 신청하기 버튼이 커서를 따라다님 (JS) → 따라다니는 동안 영역 클릭 = 신청하기 */
+.m_issue .issue_apply {z-index: 2; will-change: transform;}
+.m_issue .issue_apply.is_moving {pointer-events: none;}
+.m_issue.apply_follow {cursor: pointer;}
+.m_issue.apply_follow .issue_apply {background-color: rgba(255, 255, 255, .2);}
 
-.m_issue .issue_info {display: flex; flex-direction: column; justify-content: center; width: 80%; min-height: 277px; margin-top: 120px; padding: 55px 80px; background-color: rgba(255, 255, 255, .1);}
-.m_issue .issue_info li {position: relative; padding-left: 10px; font-family: var(--f-noto); font-size: 14px; line-height: 1.6; font-weight: 400; letter-spacing: -0.02em;}
-.m_issue .issue_info li::before {content: ''; position: absolute; left: 0; top: 9.7px; width: 3px; height: 3px; border-radius: 50%; background-color: #fff;}
-.m_issue .issue_info li + li {margin-top: 19.6px;}
-.m_issue .issue_info .sub {font-size: 12px; opacity: .7;}
+.m_issue .issue_info {width: 80%; margin-top: 74.6px; padding: 55px 0 55px 80px; background-color: rgba(255, 255, 255, .1);}
+.m_issue .issue_info li {position: relative; padding-left: 9px; font-family: var(--f-noto); font-size: 18px; line-height: 1.6; font-weight: 400; letter-spacing: -0.02em;}
+.m_issue .issue_info li::before {content: '·'; position: absolute; left: 0; top: 0;}
+.m_issue .issue_info li + li {margin-top: 19.5px;}
+.m_issue .issue_info .sub {margin-left: 2px; font-family: var(--f-suit); font-size: 16px; line-height: 1.6; opacity: .7;}
 
 
 /* ---------------------------------------------------------
 	RESPONSIVE (PC 축소 구간)
 --------------------------------------------------------- */
-@media screen and (max-width:1600px) {
-	.m_lineup .lineup_tit {left: 0;}
-	.m_lineup .item1 {left: 0;}
-}
-
 @media screen and (max-width:1440px) {
 	.m_lineup .item .tit {font-size: 24px;}
-	.m_lineup .item .tit .en {font-size: 26px;}
-	.m_lineup .item .desc {font-size: 20px;}
-	.m_benefit .box {padding: 30px 36px;}
+	.m_benefit .box {padding: 29px 20px 29px 34px;}
 	.m_benefit .box .tit {font-size: 22px;}
-	.m_we .slide_txt {width: 46%;}
+	.m_benefit .dot_list > li {font-size: 16px;}
+	.m_we .slide_txt .tit {font-size: 46px;}
+	.m_issue .issue_info {padding-right: 40px;}
+	.m_issue .issue_info li {font-size: 16px;}
+	.m_issue .issue_info .sub {font-size: 14px;}
 }
 
 @media screen and (max-width:1280px) {
-	.m_lineup .lineup_tit {font-size: 52px;}
-	.m_lineup .lineup_desc {top: 840px;}
+	.m_lineup .lineup_desc_r {top: 820px;}
+	.m_lineup .item .desc {font-size: 16px; line-height: 1.6;}
 	.m_benefit .benefit_list {grid-template-columns: repeat(2, 1fr);}
 	.m_benefit .box {min-height: 300px;}
 	.m_benefit .box:nth-child(n+4) .dot_list {margin-top: 20.4px;}
 	.m_we .we_fix {width: 46%;}
+	.m_we .we_fix .desc {font-size: 16px; line-height: 1.6;}
 	.m_we .we_fix .desc br {display: none;}
-	.m_we .slide_txt .tit {font-size: 34px;}
-	.m_we .slide_txt {bottom: 60px;}
-	.m_we .we_count {bottom: 251px;}
+	.m_we .slide_txt .tit {font-size: 38px;}
+	.m_we .slide_txt .desc {font-size: 17px;}
+	.m_we .slide_txt .btns {margin-top: 40px;}
 	.m_season .golf_list .txt {left: 24px; right: 24px; bottom: 24px;}
-	.m_season .golf_list .tit {font-size: 22px;}
-	.m_season .golf_list .desc p {font-size: 15px;}
+	.m_season .golf_list > li.golf2 .txt,
+	.m_season .golf_list > li.golf3 .txt {bottom: 24px;}
+	.m_season .golf_list .tit {font-size: 20px;}
+	.m_season .golf_list .desc p {font-size: 15px; line-height: 1.5;}
+	.m_season .golf_list .desc .dim {font-size: 13px;}
+	.m_issue .issue_tit {font-size: 46px; line-height: 1.4;}
 	.m_issue .issue_info {width: 100%; padding: 40px 50px;}
 }
 
@@ -259,63 +304,57 @@
 	.m_lineup_wrap .light2 {top: 1038.43px;}
 	.m_lineup {height: auto; padding: 100px 0 182px;}
 	.m_lineup .lineup_inner {height: auto;}
+	.m_lineup .lineup_fix {position: static; height: auto; pointer-events: auto;}
 	.m_lineup .lineup_card {display: flex; justify-content: center; gap: 16px; padding-bottom: 48px;}
 	.m_lineup .lineup_card img {width: 148px; height: 234px; object-fit: cover;}
 	.m_lineup .lineup_tit,
-	.m_lineup .lineup_desc {position: static; white-space: normal;}
+	.m_lineup .lineup_desc {position: static; width: auto; white-space: normal;}
 	.m_lineup .lineup_tit {font-family: var(--f-42); font-size: 30px; line-height: 1.4; letter-spacing: -0.02em;}
 	.m_lineup .lineup_desc {margin-top: 16px; font-family: var(--f-42); font-size: 13px; line-height: 1.6; letter-spacing: -0.02em;}
-	.m_lineup .lineup_desc b {font-family: var(--f-42);}
 	.m_lineup .lineup_list {display: flex; flex-direction: column; gap: 60px; padding-top: 80px;}
 	.m_lineup .item {position: static; width: auto;}
-	.m_lineup .item .img {opacity: 1;}
 	.m_lineup .item1 .img {width: 240px; aspect-ratio: auto; height: 200px;}
 	.m_lineup .item2 .img {width: 280px; aspect-ratio: auto; height: 163px;}
 	.m_lineup .item3 .img {width: 220px; aspect-ratio: auto; height: 280px;}
-	.m_lineup .item .txt {max-width: none; margin: 16px 0 0; font-family: var(--f-42);}
+	.m_lineup .item .txt {margin: 16px 0 0; font-family: var(--f-42); white-space: normal;}
 	.m_lineup .item2 .txt {max-width: 280px;}
 	.m_lineup .item .tit {font-size: 18px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em;}
-	.m_lineup .item .desc {margin-top: 6px; font-size: 14px; line-height: 1.5; letter-spacing: -0.02em;}
+	.m_lineup .item .desc {margin-top: 6px; font-size: 14px; line-height: 1.5; letter-spacing: -0.02em; color: rgba(255, 255, 255, .7);}
 
 	/* 03 */
 	.m_benefit {padding: 40px 0 100px;}
 	.m_benefit .sec_tit {font-weight: 400;}
-	.m_benefit .sec_tit b {font-weight: 600;}
 	.m_benefit .benefit_list {grid-template-columns: 1fr; gap: 12px; margin-top: 28px;}
-	.m_benefit .box {min-height: 0; padding: 24px 20px;}
+	.m_benefit .box {min-height: 0; padding: 24px 20px; border: 0; background-color: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; color: #000;}
 	.m_benefit .box .tit {font-family: var(--f-42); font-size: 18px; line-height: 1.4; letter-spacing: -0.02em;}
 	.m_benefit .box .dot_list,
 	.m_benefit .box:nth-child(n+4) .dot_list {margin-top: 16px;}
-	.m_benefit .dot_list > li,
-	.m_benefit .dot_list > li.lh14 {padding-left: 12px; font-family: var(--f-42); font-size: 14px; line-height: 1.5; letter-spacing: -0.02em;}
-	.m_benefit .dot_list > li::before,
-	.m_benefit .dot_list > li.lh14::before {top: 8.5px; width: 4px; height: 4px;}
+	.m_benefit .dot_list > li {padding-left: 12px; font-family: var(--f-42); font-size: 14px; line-height: 1.5; letter-spacing: -0.02em; color: #252525;}
+	.m_benefit .dot_list > li::before {content: ''; position: absolute; left: 0; top: 8.5px; width: 4px; height: 4px; border-radius: 50%; background-color: #252525;}
 	.m_benefit .dot_list > li + li,
 	.m_benefit .dot_list > li:has(.sub) + li {margin-top: 8px;}
 	.m_benefit .dot_list .sub,
-	.m_benefit .dot_list .sub.lh14 {margin-top: 4px; font-size: 13px; line-height: 1.5;}
+	.m_benefit .dot_list .sub.lh14 {margin-top: 4px; padding-left: 0; font-family: var(--f-42); font-size: 13px; line-height: 1.5; color: rgba(37, 37, 37, .8);}
 	.m_benefit .dot_list .sub p + p {margin-top: 2px;}
 	.m_benefit .benefit_note {margin-top: 28px; padding-left: 15px; text-indent: -15px; text-align: left; font-family: var(--f-42); font-size: 12px; line-height: 1.5; opacity: 1; color: rgba(255, 255, 255, .7);}
 
 	/* MO 공통 버튼 (상품 혜택 확인하기 · 시즈널 혜택 확인하기) */
-	.main .btn_wrap {display: flex; justify-content: center;}
 	.m_benefit .btn_wrap {margin-top: 28px; padding-top: 4px;}
-	.main .btn_more {display: inline-flex; align-items: center; justify-content: center; gap: 8.75px; padding: 13.125px 17.5px; border: .875px solid #fff; border-radius: 26.25px; font-family: var(--f-pre); font-size: 14px; line-height: 1.4; font-weight: 500; letter-spacing: -0.02em; white-space: nowrap;}
+	.main .btn_more {gap: 8.75px; padding: 13.125px 17.5px; border-width: .875px; border-radius: 26.25px; font-size: 14px;}
 	.main .btn_more i {font-size: 14px;}
 
 	/* 04 */
 	.m_we {padding: 0 0 40px;}
 	.m_we .we_fix {position: static; width: auto; padding: 80px 0 48px;}
 	.m_we .we_fix .tit {font-family: var(--f-42); font-size: 15px;}
-	.m_we .we_fix .desc {margin-top: 10px; font-family: var(--f-42); font-size: 14px; opacity: 1; color: rgba(255, 255, 255, .7);}
+	.m_we .we_fix .desc {margin-top: 10px; font-family: var(--f-42); font-size: 14px; line-height: 1.6; opacity: 1; color: rgba(255, 255, 255, .7);}
 	.m_we .we_swiper {width: auto; margin: 0 -20px;}
 	.m_we .swiper-slide {flex-direction: column; justify-content: flex-start;}
 	.m_we .slide_img {width: 100%; aspect-ratio: 375 / 280;}
 	.m_we .slide_img img {object-position: center;}
 	.m_we .slide_txt {position: static; width: auto; padding: 32px 20px 56px;}
-	.m_we .slide_txt .count {font-family: var(--f-ibm); font-size: 13px; line-height: 1.4; font-weight: 500; letter-spacing: -0.02em;}
-	.m_we .slide_txt .tit {margin-top: 10px; font-family: var(--f-pre); font-size: 26px; font-weight: 600;}
-	.m_we .slide_txt .desc {min-height: 0; margin-top: 10px; font-family: var(--f-ibm); font-size: 15px; line-height: 1.55; opacity: 1; color: rgba(255, 255, 255, .8);}
+	.m_we .slide_txt .tit {font-family: var(--f-pre); font-size: 26px; font-weight: 600;}
+	.m_we .slide_txt .desc {min-height: 0; margin-top: 10px; font-family: var(--f-ibm); font-size: 15px; line-height: 1.55; font-weight: 400; opacity: 1; color: rgba(255, 255, 255, .8);}
 	.m_we .slide_txt .btns {gap: 8px; margin-top: 24px;}
 	.m_we .btn_pill {display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px 0 16px; border: 1px solid #fff; border-radius: 30px; font-family: var(--f-suit); font-size: 13px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap;}
 	.m_we .btn_pill::after {content: ''; width: 12px; height: 12px; background: url(/img/main/ico_arrow_wh.svg) no-repeat center / contain;}
@@ -342,9 +381,10 @@
 	.m_season .golf_list > li::after,
 	.m_season .golf_list > li:hover::after {opacity: 1; background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, .7) 100%);}
 	.m_season .golf_list > li.golf2::after {background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .7) 69.231%);}
-	.m_season .golf_list .txt {left: 20px; right: 20px; bottom: 20px;}
+	.m_season .golf_list .txt,
+	.m_season .golf_list > li.golf2 .txt,
+	.m_season .golf_list > li.golf3 .txt {left: 20px; right: 20px; bottom: 20px;}
 	.m_season .golf_list .tit {font-family: var(--f-42); font-size: 20px; line-height: 1.4; letter-spacing: -0.02em;}
-	.m_season .golf_list .desc {grid-template-rows: 1fr;}
 	.m_season .golf_list .desc p,
 	.m_season .golf_list .desc .dim {font-family: var(--f-42); font-size: 14px; line-height: 1.5; font-weight: 600; color: #fff;}
 	.m_season .golf_list .desc p:first-child {padding-top: 8px;}
@@ -354,17 +394,31 @@
 	.m_issue {padding: 90px 0 80px;}
 	.m_issue .issue_bg {background-image: url(/img/main/issue_bg_mo.jpg);}
 	.m_issue .issue_inner {gap: 36px;}
-	.m_issue .issue_tit {left: 0; font-family: var(--f-42); font-size: 26px; line-height: 1.45; white-space: normal;}
+	.m_issue .issue_tit {left: 0; font-family: var(--f-42); font-size: 26px; line-height: 1.45; letter-spacing: -0.02em; white-space: normal;}
 	.m_issue .issue_tit b {font-family: var(--f-42);}
 	.m_issue .issue_card {width: 203.13px; height: 320px; margin-top: 0; box-shadow: 0 0 16px rgba(0, 0, 0, .2);}
-	.m_issue .issue_toggle {margin-top: 0;}
+	/* MO 토글 : 라인형 (시안 MO) */
+	.m_issue .issue_toggle {width: 207px; height: 34px; margin-top: 0; padding: 0; border: 0; border-radius: 0; background-color: transparent; overflow: visible;}
+	.m_issue .issue_toggle::before {content: ''; position: absolute; inset: 0; border: 1px solid #fff; border-radius: 30px; pointer-events: none;}
+	.m_issue .issue_toggle button {height: 34px; padding: 7px 15px; border-radius: 30px; font-size: 14px; color: #fff;}
+	.m_issue .issue_toggle button:first-child {width: 117px;}
+	.m_issue .issue_toggle button:last-child {width: 90px;}
+	.m_issue .issue_toggle button.on {color: #000;}
 	.m_issue .issue_apply {position: static; width: 100.8px; height: 100.8px; border-width: .72px; box-shadow: 0 0 14.4px rgba(255, 255, 255, .15); font-size: 11.52px; letter-spacing: -0.02em;}
 	.m_issue .issue_apply .s {font-size: 10.08px;}
-	.m_issue .issue_info {width: 100%; min-height: 0; margin-top: 0; padding: 20px 18px;}
+	.m_issue .issue_info {width: 100%; margin-top: 0; padding: 20px 18px;}
 	.m_issue .issue_info li {padding-left: 11px; font-family: var(--f-42); font-size: 12px; line-height: 1.6;}
-	.m_issue .issue_info li::before {top: 8px;}
+	.m_issue .issue_info li::before {content: ''; position: absolute; left: 0; top: 8px; width: 3px; height: 3px; border-radius: 50%; background-color: #fff;}
 	.m_issue .issue_info li + li {margin-top: 10px;}
-	.m_issue .issue_info .sub {margin-top: 4px; font-size: 11px; opacity: 1; color: rgba(255, 255, 255, .7);}
+	.m_issue .issue_info .sub {margin-top: 4px; margin-left: 0; font-family: var(--f-42); font-size: 11px; opacity: 1; color: rgba(255, 255, 255, .7);}
+}
+
+/* 모션 최소화 설정 존중 */
+@media (prefers-reduced-motion: reduce) {
+	.m_lineup .lineup_fix {transition: none;}
+	.m_lineup_wrap .light_line path {stroke-dashoffset: 0;}
+	.m_season .golf_list > li::after,
+	.m_season .golf_list .desc {transition: none;}
 }
 
 @media screen and (max-width:360px) {

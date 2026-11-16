@@ -20,7 +20,9 @@ button {background: none; border: 0; padding: 0; cursor: pointer; color: inherit
 /* ---------------------------------------------------------
 	HEADER
 --------------------------------------------------------- */
-.header {position: fixed; top: 0; left: 0; z-index: 100; width: 100%; color: #fff; transition: background-color .3s, color .3s, box-shadow .3s;}
+.header {position: fixed; top: 0; left: 0; z-index: 100; width: 100%; color: #fff; transition: background-color .3s, color .3s, box-shadow .3s, transform .4s ease;}
+/* 아래로 스크롤 시 숨김 (js/layout.js) */
+.header.hide {transform: translateY(-100%); box-shadow: none;}
 .header .hd_inner {display: flex; align-items: center; height: var(--hd-h);}
 .header .hd_logo {margin-right: auto;}
 .header .hd_logo a {display: block;}
@@ -37,6 +39,10 @@ button {background: none; border: 0; padding: 0; cursor: pointer; color: inherit
 .header .gnb_sub {position: absolute; top: 100%; left: 50%; display: flex; flex-direction: column; gap: 16px; padding: 24px 28px; border-radius: 14px; background: var(--glass-bg); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 12px 32px rgba(0, 0, 0, .3); white-space: nowrap; text-align: center; opacity: 0; visibility: hidden; transform: translate(-50%, 8px); transition: opacity .3s, transform .3s, visibility .3s;}
 .header .gnb_item:hover .gnb_sub,
 .header .gnb_item:focus-within .gnb_sub {opacity: 1; visibility: visible; transform: translate(-50%, 0);}
+/* 메뉴 클릭 후(sub_off) · 헤더 숨김(hide) 상태에서는 서브메뉴 강제 닫기 */
+.header.sub_off .gnb_sub,
+.header.hide .gnb_sub {opacity: 0 !important; visibility: hidden !important; transform: translate(-50%, 8px) !important;}
+.header.sub_off .gnb_item:not(.on) .gnb_link {opacity: .7; font-weight: 400;}
 .header .gnb_sub a {display: block; font-size: 16px; line-height: 24px; font-weight: 500; color: rgba(255, 255, 255, .8); transition: color .2s;}
 .header .gnb_sub a:hover {color: #fff;}
 

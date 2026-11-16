@@ -126,12 +126,12 @@ $(window).on('resize',function(){
 
 
 // 맨 위로 / 앵커 이동 (ScrollSmoother 사용 여부 대응)
+// 대상 섹션 상단에 0px로 딱 맞춰 이동 (헤더는 아래로 스크롤 시 숨겨지므로 오프셋 없음)
 function scrollToTarget(target){
-    const offset = $('.header').outerHeight() || 0;
     if(smoother){
-        smoother.scrollTo(target === 0 ? 0 : target, true, target === 0 ? undefined : `top ${offset}px`);
+        smoother.scrollTo(target === 0 ? 0 : target, true, target === 0 ? undefined : 'top top');
     }else{
-        const top = target === 0 ? 0 : $(target).offset().top - offset;
+        const top = target === 0 ? 0 : $(target).offset().top;
         $('html, body').stop().animate({scrollTop: top}, 600);
     }
 }
@@ -146,6 +146,15 @@ $(document).on('click','a[href*="#"]:not([href="#none"])',function(e){
     $('.header').removeClass('ham');
     $('html').css('overflow','');
     scrollToTarget($target[0]);
+});
+
+// GNB 서브메뉴: 메뉴 클릭(이동) 후 포커스·호버 상태로 서브메뉴가 남아있지 않도록 닫기
+$('.header .gnb a').on('click', function(){
+    this.blur();
+    $('.header').addClass('sub_off');
+});
+$('.header .gnb_item').on('mouseleave', function(){
+    $('.header').removeClass('sub_off');
 });
 $(document).on('click','a[href="#none"]',function(e){ e.preventDefault(); });
 
