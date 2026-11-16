@@ -110,15 +110,30 @@ $(function(){
         });
 
         // 섹션 진입 시 타이틀(좌) · 카드 플레이트(우) 페이드인 / 1회
-        //  - PC : 타이틀·설명 먼저 → 카드 플레이트 .2s 뒤 / MO : 카드 플레이트(상단) 먼저 → 타이틀
+        //  - 요소별로 각자 화면 하단 80% 지점에 들어올 때 시작 (섹션 기준 일괄 실행 시 MO 타이틀은 화면 밖에서 모션이 끝남)
+        //  - PC : 타이틀·카드가 같은 높이라 카드 플레이트는 .2s 뒤 / MO : 카드(상단) → 타이틀 순으로 스크롤에 따라 등장
         //  - 타이틀은 겹침 방지 스크롤 페이드(.lineup_tit · .lineup_desc_l)와 충돌하지 않도록 래퍼(.lineup_fix_in)에 적용
-        const introTit = lineup.querySelector('.lineup_fix_in');
-        const introCard = lineup.querySelector(isPC ? '.lineup_card_pc' : '.lineup_card');
-        gsap.timeline({ scrollTrigger: { trigger: lineup, once: true, start: isPC ? 'top 60%' : 'top 75%' } })
-            .from(isPC ? introTit : introCard, { opacity: 0, duration: 1, ease: easeHtml }, 0)
-            .from(isPC ? introTit : introCard, { y: 60, duration: 1.2, ease: easeHtml }, 0)
-            .from(isPC ? introCard : introTit, { opacity: 0, duration: 1, ease: easeHtml }, .2)
-            .from(isPC ? introCard : introTit, { y: 60, duration: 1.2, ease: easeHtml }, .2);
+        //  - PC 타이틀은 pin 영역 안에 있어 트리거를 섹션(lineup) + 요소 위치 offset 으로 계산
+        const offsetIn = function(el){ // 섹션 기준 요소 위치 (등장 모션 transform 영향 없도록 offsetTop 사용)
+            let top = 0;
+            while(el && el !== lineup){ top += el.offsetTop; el = el.offsetParent; }
+            return top;
+        };
+        [
+            { box: lineup.querySelector('.lineup_fix_in'), pos: lineup.querySelector('.lineup_tit'), delay: 0 },
+            { box: lineup.querySelector(isPC ? '.lineup_card_pc' : '.lineup_card'), delay: isPC ? .2 : 0 },
+        ].forEach(function(o){
+            if(!o.box) return;
+            gsap.timeline({
+                scrollTrigger: {
+                    // ※ invalidateOnRefresh 사용 금지 : from 시작값(opacity 0)을 최종값으로 다시 기록해 모션이 사라짐 (start 함수는 리프레시마다 재계산됨)
+                    trigger: lineup, once: true,
+                    start: function(){ return 'top+=' + offsetIn(o.pos || o.box) + ' 80%'; },
+                },
+            })
+                .from(o.box, { opacity: 0, duration: 1, ease: easeHtml }, o.delay)
+                .from(o.box, { y: 60, duration: 1.2, ease: easeHtml }, o.delay);
+        });
 
         return function(){
             lineup.classList.remove('is_out');
