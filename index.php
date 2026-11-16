@@ -137,7 +137,7 @@
                             <li class="box">
                                 <p class="tit">Annual Gift 서비스 (연 1회 / 택 1)</p>
                                 <ul class="dot_list">
-                                    <li>KALPAK 여행 바우처 90만원권</li>
+                                    <li>해외 럭셔리 호텔 90만원 이용권</li>
                                     <li>국내 특급 호텔 뷔페 30만원 이용권 3매</li>
                                     <li class="lh14">대한항공 마일리지 3만 마일 + 마이신한포인트 15만 포인트</li>
                                     <li>제휴 골프장 80만원 이용권</li>
@@ -145,15 +145,15 @@
                             </li>
                             <li class="box">
                                 <p class="tit">리워드 서비스</p>
-                                <ul class="dot_list">
+                                <ul class="dot_list"> 
                                     <li>
                                         마이신한 포인트형
-                                        <div class="sub">
+                                        <div class="sub"> 
                                             <p>국내 일시불/할부 이용금액 1.3% 적립<br>해외 일시불 이용금액 2.5% 적립 </p>
                                         </div>
                                     </li>
                                     <li>
-                                        스카이패스형
+                                        스카이패스형 
                                         <div class="sub lh14">
                                             <p>국내 일시불/할부 및 해외 일시불 이용금액 1,500원 당<br>대한항공 마일리지 1마일 적립</p>
                                             <p>해외 일시불 이용금액 1,500원 당 대한항공 마일리지 <br class="mo_only">1마일 추가 적립</p>
