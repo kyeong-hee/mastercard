@@ -454,4 +454,23 @@ $(function(){
         $('.issue_card img').removeClass('on').filter('[data-card="' + card + '"]').addClass('on');
     });
 
+
+    // ---------------------------------------------------------
+    // [모션] 메인 버튼 호버 : 원형 퍼짐 채움 (.btn_fx · css/main.css)
+    //  - 커서가 들어온/나간 지점을 원의 중심으로, 지름은 그 지점에서 버튼 끝까지 덮는 크기(대각선 x 2)
+    //  - 키보드 포커스 : 가운데에서 퍼짐
+    // ---------------------------------------------------------
+    $('.main .btn_fx').on('mouseenter mouseleave', function(e){
+        const r = this.getBoundingClientRect();
+        this.style.setProperty('--fx-x', (e.clientX - r.left) + 'px');
+        this.style.setProperty('--fx-y', (e.clientY - r.top) + 'px');
+        this.style.setProperty('--fx-d', (Math.hypot(r.width, r.height) * 2) + 'px');
+    }).on('focusin', function(){
+        if(this.matches(':hover')) return;
+        const r = this.getBoundingClientRect();
+        this.style.setProperty('--fx-x', '50%');
+        this.style.setProperty('--fx-y', '50%');
+        this.style.setProperty('--fx-d', (Math.hypot(r.width, r.height) * 1.1) + 'px');
+    });
+
 });

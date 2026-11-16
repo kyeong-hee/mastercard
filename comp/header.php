@@ -59,7 +59,7 @@
 
         <div class="hd_util">
             <div class="hd_inquiry">
-                <button type="button" class="btn_line btn_fx btn_inquiry" aria-expanded="false" aria-controls="hdInquiry">이용 문의</button>
+                <button type="button" class="btn_line btn_inquiry" aria-expanded="false" aria-controls="hdInquiry">이용 문의</button>
                 <div class="inquiry_layer" id="hdInquiry">
                     <div class="contact">
                         <p class="ct_tit">신한카드 고객 상담센터 | The ACE Elite 카드 문의</p>
@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </div>
-            <a href="<?php echo $applyUrl; ?>" class="btn_line btn_fx">카드 신청하기</a>
+            <a href="<?php echo $applyUrl; ?>" class="btn_line">카드 신청하기</a>
         </div>
 
         <button type="button" class="hamWrap" aria-label="전체메뉴 열기" aria-controls="moMenu">

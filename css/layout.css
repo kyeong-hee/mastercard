@@ -48,12 +48,9 @@ button {background: none; border: 0; padding: 0; cursor: pointer; color: inherit
 
 /* util buttons */
 .header .hd_util {display: flex; gap: 8px; margin-left: 40px;}
-.header .btn_line {display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 20px; border: 1px solid rgba(255, 255, 255, .7); border-radius: 94px; font-size: 16px; line-height: 1.6; color: inherit; transition: background-color .3s, border-color .3s, color .45s;}
-.header .btn_line {--fx-c: #fff; --fx-t: #121214;}
+.header .btn_line {display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 20px; border: 1px solid rgba(255, 255, 255, .7); border-radius: 94px; font-size: 16px; line-height: 1.6; color: inherit; transition: background-color .3s, border-color .3s, color .3s;}
+.header .btn_line:hover,
 .header .btn_inquiry[aria-expanded='true'] {background-color: #fff; border-color: #fff; color: #121214;}
-@media (hover: hover) {
-	.header .btn_line:hover {border-color: #fff;}
-}
 .header .btn_inquiry {font-weight: 500;}
 
 .header .hd_inquiry {position: relative;}
@@ -68,30 +65,9 @@ button {background: none; border: 0; padding: 0; cursor: pointer; color: inherit
 /* 스크롤 시 흰 배경 고정 */
 .header.scroll {background-color: #fff; color: #121214; box-shadow: 0 1px 0 rgba(0, 0, 0, .06);}
 .header.scroll .hd_logo img {filter: brightness(0);}
-.header.scroll .btn_line {border-color: rgba(18, 18, 20, .3); --fx-c: #121214; --fx-t: #fff;}
+.header.scroll .btn_line {border-color: rgba(18, 18, 20, .3);}
+.header.scroll .btn_line:hover,
 .header.scroll .btn_inquiry[aria-expanded='true'] {background-color: #121214; border-color: #121214; color: #fff;}
-@media (hover: hover) {
-	.header.scroll .btn_line:hover {border-color: #121214;}
-}
-
-/* ---------------------------------------------------------
-	[모션] 버튼 호버 : 원형 퍼짐 채움 (.btn_fx)
-	- 커서가 들어온 지점에서 작은 원이 생겨 버튼 전체로 퍼지며 색이 채워짐 / 나갈 때는 나간 지점으로 줄어듦
-	- 위치·크기 : js/layout.js (btnFx) 가 --fx-x · --fx-y · --fx-d 세팅 (JS 없으면 가운데에서 퍼짐)
-	- 색상 : --fx-c (채움색) · --fx-t (채움 시 글자색) 로 버튼별 지정
-	- 키보드 포커스(:focus-visible) 도 동일하게 채움
---------------------------------------------------------- */
-.btn_fx {position: relative; overflow: hidden; isolation: isolate; --fx-c: #fff; --fx-t: #000;}
-.btn_fx::before {content: ''; position: absolute; left: var(--fx-x, 50%); top: var(--fx-y, 50%); z-index: -1; width: var(--fx-d, 250%); aspect-ratio: 1; border-radius: 50%; background-color: var(--fx-c); transform: translate(-50%, -50%) scale(0); transition: transform .5s cubic-bezier(.4, 0, .2, 1); pointer-events: none;}
-.btn_fx:focus-visible::before {transform: translate(-50%, -50%) scale(1); transition-duration: .7s; transition-timing-function: cubic-bezier(.22, 1, .36, 1);}
-.btn_fx:focus-visible {color: var(--fx-t);}
-@media (hover: hover) {
-	.btn_fx:hover::before {transform: translate(-50%, -50%) scale(1); transition-duration: .7s; transition-timing-function: cubic-bezier(.22, 1, .36, 1);}
-	.btn_fx:hover {color: var(--fx-t);}
-}
-@media (prefers-reduced-motion: reduce) {
-	.btn_fx::before {transition: none !important;}
-}
 
 /* hamburger (1024 이하) */
 .header .hamWrap {display: none; position: relative; width: 20px; height: 20px;}
