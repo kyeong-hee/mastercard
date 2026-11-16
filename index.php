@@ -99,7 +99,7 @@
                             <li class="item item2">
                                 <div class="img">
                                     <picture>
-                                        <source media="(max-width: 1024px)" srcset="/img/main/lineup_plane_mo.jpg">
+                                        <source media="(max-width: 1024px)" srcset="/img/main/lineup_desert_mo.jpg">
                                         <img src="/img/main/lineup_benefit02.jpg" alt="여행지 풍경">
                                     </picture>
                                 </div>
@@ -126,6 +126,10 @@
 
                 <!-- 03. 프리미엄 혜택 -->
                 <section class="m_benefit" id="benefit">
+                    <!-- MO 배경 빛 : 시안 03 'bg · light (PC 동일)' - PC 빛 이미지 1.3배 -->
+                    <div class="lineup_light light_benefit mo_only" aria-hidden="true">
+                        <img src="/img/main/lineup_light2.jpg" alt="">
+                    </div>
                     <div class="wrap" max="1600">
                         <h2 class="sec_tit">The ACE Elite <b>상품 혜택</b></h2>
 
@@ -206,7 +210,6 @@
                             <div class="swiper-slide">
                                 <div class="slide_img">
                                     <picture>
-                                        <source media="(max-width: 1024px)" srcset="/img/main/we_dining_mo.jpg">
                                         <img src="/img/main/we_dining.jpg" alt="파인다이닝 레스토랑 홀">
                                     </picture>
                                 </div>
@@ -214,9 +217,7 @@
                                     <p class="tit">다이닝 특전</p>
                                     <p class="desc">국내외 파인다이닝 레스토랑 할인 및 예약,<br class="mo_only"> 호텔 미식 혜택 제공</p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line pc_only">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
-                                        <a href="#none" class="btn_pill on mo_only">공통서비스</a>
-                                        <a href="#none" class="btn_pill mo_only">선택서비스</a>
+                                        <a href="#none" class="btn_line">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -224,7 +225,6 @@
                             <div class="swiper-slide">
                                 <div class="slide_img">
                                     <picture>
-                                        <source media="(max-width: 1024px)" srcset="/img/main/we_dining_mo.jpg">
                                         <img src="/img/main/we_dining.jpg" alt="">
                                     </picture>
                                 </div>
@@ -232,16 +232,13 @@
                                     <p class="tit">프리미엄 엔터테인먼트 혜택</p>
                                     <p class="desc">최고의 공연, 스포츠 경기를 가장 빠르게, 누구보다 먼저</p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line pc_only">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
-                                        <a href="#none" class="btn_pill on mo_only">공통서비스</a>
-                                        <a href="#none" class="btn_pill mo_only">선택서비스</a>
+                                        <a href="#none" class="btn_line">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                     </div>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="slide_img">
                                     <picture>
-                                        <source media="(max-width: 1024px)" srcset="/img/main/we_dining_mo.jpg">
                                         <img src="/img/main/we_dining.jpg" alt="">
                                     </picture>
                                 </div>
@@ -249,16 +246,13 @@
                                     <p class="tit">더 특별한 여정을 완성하는<br> 글로벌 호텔 혜택</p>
                                     <p class="desc">무료 숙박부터 글로벌 호텔 멤버십까지, <br/> World Elite 회원만의 프리미엄 혜택</p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line pc_only">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
-                                        <a href="#none" class="btn_pill on mo_only">공통서비스</a>
-                                        <a href="#none" class="btn_pill mo_only">선택서비스</a>
+                                        <a href="#none" class="btn_line">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                     </div>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="slide_img">
                                     <picture>
-                                        <source media="(max-width: 1024px)" srcset="/img/main/we_dining_mo.jpg">
                                         <img src="/img/main/we_dining.jpg" alt="">
                                     </picture>
                                 </div>
@@ -266,21 +260,19 @@
                                     <p class="tit">프리미엄 아울렛 혜택</p>
                                     <p class="desc">비스터 컬렉션·맥아더글렌 아울렛에서<br/> 누리는 World Elite 전용 할인 혜택 </p>
                                     <div class="btns">
-                                        <a href="#none" class="btn_line pc_only">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
-                                        <a href="#none" class="btn_pill on mo_only">공통서비스</a>
-                                        <a href="#none" class="btn_pill mo_only">선택서비스</a>
+                                        <a href="#none" class="btn_line">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- PC 이미지 하단 4분할 라인 -->
-                    <div class="we_bar pc_only">
-                        <button type="button" class="on" aria-label="01 다이닝 보기"></button>
-                        <button type="button" aria-label="02 엔터테인먼트 보기"></button>
-                        <button type="button" aria-label="03 호텔 보기"></button>
-                        <button type="button" aria-label="04 아울렛 보기"></button>
+                        <!-- 이미지 하단 4분할 라인 (PC : 이미지 하단 / MO : 이미지 안쪽 하단) -->
+                        <div class="we_bar">
+                            <button type="button" class="on" aria-label="01 다이닝 보기"></button>
+                            <button type="button" aria-label="02 엔터테인먼트 보기"></button>
+                            <button type="button" aria-label="03 호텔 보기"></button>
+                            <button type="button" aria-label="04 아울렛 보기"></button>
+                        </div>
                     </div>
                 </div>
             </section>
