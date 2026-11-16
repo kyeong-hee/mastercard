@@ -232,7 +232,7 @@
                                 </div>
                                 <div class="slide_txt">
                                     <p class="tit">프리미엄 엔터테인먼트 혜택</p>
-                                    <p class="desc">최고의 공연, 스포츠 경기를 가장 빠르게, 누구보다 먼저</p>
+                                    <p class="desc">최고의 공연, 스포츠 경기를 가장 빠르게,<br class="mo_only"> 누구보다 먼저</p>
                                     <div class="btns">
                                         <a href="#none" class="btn_line">자세히 보기 <img src="/img/main/ico_chevron.svg" alt=""></a>
                                     </div>

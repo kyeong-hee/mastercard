@@ -81,11 +81,13 @@ $(function(){
         //          PC 는 02 섹션이 화면 하단 20% 들어왔을 때 바로 시작 (기존 37% 노출 시점 → 초반 배경이 허전해 앞당김)
         const lightImgs = isPC ? [light1.querySelector('img')] : gsap.utils.toArray('.lineup_light img', wrap);
         const lightLine = light1.querySelector('.light_line path');
+        // ※ 1회 재생 모션은 once:true 대신 end:'max' + toggleActions 'play none none none' 사용 (화면 동작 동일)
+        //    once 트리거는 새로고침(스크롤 위치 복원) 시 위치 계산 도중 스스로 제거되어, 아래 04 섹션 pin 계산 중 ScrollTrigger 오류 발생
         lightImgs.forEach(function(img){
             gsap.set(img, { '--draw': isPC ? .62 : .6 });
             const tl = gsap.timeline({
                 scrollTrigger: {
-                    trigger: isPC ? wrap : img.closest('.lineup_light'), once: true,
+                    trigger: isPC ? wrap : img.closest('.lineup_light'), end: 'max', toggleActions: 'play none none none',
                     start: isPC ? 'top 80%' : 'top 75%',
                 },
             });
@@ -104,7 +106,7 @@ $(function(){
         // 혜택 이미지 스크롤 등장 (translateY 80 → 0 / opacity 1s, transform 1.2s)
         gsap.utils.toArray('.item', lineup).forEach(function(item){
             // 참고 HTML : 이미지 20% 노출 시 (threshold .2)
-            gsap.timeline({ scrollTrigger: { trigger: item, once: true, start: 'top bottom-=' + Math.round(item.offsetHeight * .2) } })
+            gsap.timeline({ scrollTrigger: { trigger: item, end: 'max', toggleActions: 'play none none none', start: 'top bottom-=' + Math.round(item.offsetHeight * .2) } })
                 .from(item, { opacity: 0, duration: 1, ease: easeHtml }, 0)
                 .from(item, { y: 80, duration: 1.2, ease: easeHtml }, 0);
         });
@@ -127,7 +129,7 @@ $(function(){
             gsap.timeline({
                 scrollTrigger: {
                     // ※ invalidateOnRefresh 사용 금지 : from 시작값(opacity 0)을 최종값으로 다시 기록해 모션이 사라짐 (start 함수는 리프레시마다 재계산됨)
-                    trigger: lineup, once: true,
+                    trigger: lineup, end: 'max', toggleActions: 'play none none none',
                     start: function(){ return 'top+=' + offsetIn(o.pos || o.box) + ' 80%'; },
                 },
             })
@@ -146,23 +148,77 @@ $(function(){
     // 04. World Elite 큐레이션 롤링
     //     01 다이닝 → 02 엔터테인먼트 → 03 호텔 → 04 아울렛
     //     이미지와 텍스트가 함께 롤링 (시안 설명 반영)
+    //  - PC(1025px 이상) 스크롤 고정(pin) : 섹션을 화면에 고정하고 스크롤 진행도에 따라 01 → 04 전환
+    //                       4개 혜택을 모두 본 뒤(04 구간까지 스크롤)에 고정 해제 → 다음 섹션으로 이동
+    //                       역스크롤 시 04 → 01 순으로 되돌아감 / 하단 4분할 라인 클릭 시 해당 혜택 구간으로 스크롤 이동
+    //  - MO(1024px 이하) : 고정 없이 자동 롤링(4초) + 스와이프로 넘기기 / 라인 클릭 시 해당 혜택으로 전환
+    //  - prefers-reduced-motion : reduce 인 경우 PC 도 고정 없이 MO 와 동일하게 동작
     // ---------------------------------------------------------
     const $weBar = $('.m_we .we_bar button');
+    const weSection = document.querySelector('.m_we');
+    const WE_COUNT = $weBar.length;
+    let weST = null; // 스크롤 고정 ScrollTrigger (모션 미적용 시 null)
 
     const weSwiper = new Swiper('.we_swiper', {
         effect: 'fade',
         fadeEffect: { crossFade: true },
-        loop: true,
+        // loop 대신 rewind : PC 스크롤 진행도 ↔ 슬라이드 번호를 1:1 로 맞추기 위함 (loop 는 slideToLoop 연속 호출 시 전환 누락)
+        //                    자동 롤링(MO)은 04 다음 01 로 되감기
+        rewind: true,
         speed: 800,
         autoplay: { delay: 4000, disableOnInteraction: false },
         on: {
             slideChange: function(){
-                $weBar.removeClass('on').eq(this.realIndex).addClass('on');
+                $weBar.removeClass('on').eq(this.activeIndex).addClass('on');
             },
         },
     });
     $weBar.on('click', function(){
-        weSwiper.slideToLoop($(this).index());
+        const idx = $(this).index();
+        if(!weST){ weSwiper.slideTo(idx); return; }
+        // 해당 혜택 구간 가운데로 스크롤 → onUpdate 에서 슬라이드 전환
+        const y = weST.start + (weST.end - weST.start) * (idx + .5) / WE_COUNT;
+        if(smoother) smoother.scrollTo(y, true);
+        else gsap.to(window, { scrollTo: y, duration: .8, ease: 'power2.inOut' });
+    });
+
+    mm.add('(min-width: 1025px) and (prefers-reduced-motion: no-preference)', function(){
+        weSwiper.autoplay.stop();
+        weSwiper.allowTouchMove = false; // 스와이프로 넘기면 스크롤 위치와 어긋나므로 스크롤로만 전환
+        weSwiper.slideTo(0, 0);
+
+        weST = ScrollTrigger.create({
+            trigger: weSection,
+            // 고정 위치 : 고정 헤더(역스크롤 시 노출) 아래 남은 영역에 슬라이드(이미지·문구·라인) 세로 중앙
+            //            타이틀(.we_fix)이 슬라이드 상단과 같은 높이라 함께 보임
+            //            슬라이드가 남은 영역보다 크면(낮은 해상도) 하단 기준 (이미지·문구·라인이 잘리지 않게)
+            start: function(){
+                const hd = document.querySelector('.header');
+                const hdH = hd ? hd.offsetHeight : 0;
+                const box = weSection.querySelector('.we_swiper');
+                const boxTop = box.getBoundingClientRect().top - weSection.getBoundingClientRect().top;
+                const space = window.innerHeight - hdH;
+                const y = box.offsetHeight <= space ? hdH + (space - box.offsetHeight) / 2 : window.innerHeight - box.offsetHeight;
+                return 'top ' + Math.round(y - boxTop) + 'px';
+            },
+            // 혜택 1개당 화면 높이 70% 만큼 스크롤
+            end: function(){ return '+=' + Math.round(window.innerHeight * .7 * WE_COUNT); },
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: function(self){
+                const idx = Math.min(WE_COUNT - 1, Math.floor(self.progress * WE_COUNT));
+                if(idx !== weSwiper.activeIndex) weSwiper.slideTo(idx);
+            },
+        });
+        // 고정 중 섹션 위·아래로 보이는 여백(pin-spacer)을 섹션 배경색으로 채움
+        weSection.parentNode.style.backgroundColor = getComputedStyle(weSection).backgroundColor;
+
+        return function(){
+            weST = null;
+            weSwiper.allowTouchMove = true;
+            weSwiper.autoplay.start();
+        };
     });
 
 

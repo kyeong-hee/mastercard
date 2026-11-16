@@ -6,6 +6,7 @@
 ========================================================= */
 
 .main {--f-noto: 'Noto Sans KR', sans-serif; --f-suit: 'SUIT', 'Noto Sans KR', sans-serif; --f-pre: 'Pretendard', sans-serif; --f-inter: 'Inter', 'Noto Sans KR', sans-serif; --f-42: '42dot Sans', 'Noto Sans KR', sans-serif; --f-ibm: 'IBM Plex Sans KR', sans-serif;}
+body {background-color: #141415;}
 .main, .main * {box-sizing: border-box;}
 .main {overflow: hidden; color: #fff;}
 .main img {display: block; max-width: 100%;}
