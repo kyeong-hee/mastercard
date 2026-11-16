@@ -444,4 +444,87 @@ $(function(){
         $('.issue_card img').removeClass('on').filter('[data-card="' + card + '"]').addClass('on');
     });
 
+
+    // ---------------------------------------------------------
+    // 섹션 페이드인 (참고 : /worldelite/ 모션 - js/worldelite.js)
+    //  - 01 비주얼 : 배경 확대 상태 → 원본 크기로 서서히 축소(줌아웃) + 타이틀 줄 단위 순차 등장 (페이지 로드 시 1회)
+    //  - 섹션 제목 : 스크롤 도달 시 fade-left (오른쪽 → 제자리)
+    //  - 카드·리스트 : 스크롤 도달 시 fade-up 순차 등장 (ScrollTrigger.batch - 화면에 함께 들어온 항목끼리 순차, MO 세로 나열도 각자 도달 시점에 등장)
+    //  - 진입 시 재생 / 위로 벗어나면 되감기 → 다시 내려오면 반복 (참고 페이지와 동일)
+    //  - 02 혜택 라인업은 기존 모션 유지 (미적용)
+    //  - ※ 04 · 06 은 pin · 마우스 따라다니기 · 틸트 모션과 충돌하지 않도록 대상 요소를 분리
+    //       04 : pin 위치 계산에 쓰이는 .we_swiper 대신 내부 이미지·문구·라인에 적용
+    //       06 : 신청하기 버튼은 위치(x·y)를 마우스 따라다니기가 제어하므로 opacity 만 적용
+    //  - 이 코드는 04 pin 생성 이후에 둬야 05 · 06 시작 위치가 pin 여백까지 반영됨 (ScrollTrigger 생성 순서)
+    //  - prefers-reduced-motion : reduce 인 경우 미적용
+    // ---------------------------------------------------------
+    mm.add('(prefers-reduced-motion: no-preference)', function(){
+        const reveal = { start: 'top 85%', toggleActions: 'play none none reverse' };
+        const ease = 'power3.out';
+
+        // 섹션 제목 영역 : fade-left
+        const fadeLeft = function(targets, trigger){
+            gsap.from(targets, {
+                opacity: 0, x: 60, duration: 1, ease: ease, stagger: .12,
+                scrollTrigger: Object.assign({ trigger: trigger }, reveal),
+            });
+        };
+        // 단일 요소·묶음 : fade-up
+        const fadeUp = function(targets, trigger, y){
+            gsap.from(targets, {
+                opacity: 0, y: y || 50, duration: .9, ease: ease, stagger: .12,
+                scrollTrigger: Object.assign({ trigger: trigger }, reveal),
+            });
+        };
+        // 카드·리스트 : 항목별 도달 시 fade-up 순차 (역스크롤로 위로 벗어나면 다시 숨김)
+        const batchUp = function(targets){
+            targets = gsap.utils.toArray(targets);
+            if(!targets.length) return;
+            gsap.set(targets, { opacity: 0, y: 50 });
+            ScrollTrigger.batch(targets, {
+                start: reveal.start,
+                onEnter: function(b){ gsap.to(b, { opacity: 1, y: 0, duration: .9, ease: ease, stagger: .1, overwrite: true }); },
+                onLeaveBack: function(b){ gsap.to(b, { opacity: 0, y: 50, duration: .5, ease: 'power2.in', overwrite: true }); },
+            });
+        };
+
+        // 01. 비주얼
+        const vis = document.querySelector('.m_vis');
+        gsap.timeline({ defaults: { ease: ease } })
+            .fromTo(vis.querySelector('.vis_media > *'), { scale: 1.18 }, { scale: 1, duration: 2.6, ease: 'power2.out' }, 0)
+            .from(vis.querySelectorAll('.vis_tit .ln'), { opacity: 0, y: 40, duration: 1, stagger: .14 }, .35);
+
+        // 03. 프리미엄 혜택
+        fadeLeft('.m_benefit .sec_tit', '.m_benefit .sec_tit');
+        batchUp('.m_benefit .benefit_list > li');
+        fadeUp('.m_benefit .benefit_note, .m_benefit .btn_wrap', '.m_benefit .benefit_note', 30);
+
+        // 04. World Elite 등급 혜택
+        fadeLeft('.m_we .we_fix > *', '.m_we .we_fix');
+        gsap.timeline({ defaults: { ease: ease }, scrollTrigger: Object.assign({ trigger: '.m_we .we_swiper' }, reveal) })
+            .from('.m_we .slide_img', { opacity: 0, y: 50, duration: .9 }, 0)
+            .from('.m_we .slide_txt', { opacity: 0, y: 40, duration: .9 }, .15)
+            .from('.m_we .we_bar', { opacity: 0, duration: .9 }, .3);
+
+        // 05. 시즈널 혜택
+        fadeLeft('.m_season .season_top > *', '.m_season .season_top');
+        gsap.utils.toArray('.m_season .season_head').forEach(function(head){
+            fadeUp(head.children, head, 30);
+        });
+        gsap.from('.m_season .dining_swiper', {
+            opacity: 0, x: 100, duration: 1.1, ease: ease,
+            scrollTrigger: Object.assign({ trigger: '.m_season .dining_area' }, reveal),
+        });
+        batchUp('.m_season .golf_list > li');
+        fadeUp('.m_season .btn_wrap', '.m_season .btn_wrap', 30);
+
+        // 06. 발급
+        gsap.timeline({ defaults: { ease: ease }, scrollTrigger: Object.assign({ trigger: issueInner }, reveal) })
+            .from(issue.querySelector('.issue_tit'), { opacity: 0, y: 40, duration: 1 }, 0)
+            .from(issueCard, { opacity: 0, y: 60, duration: 1.1 }, .15)
+            .from(issueToggle, { opacity: 0, y: 30, duration: .9 }, .35)
+            .from(applyBtn, { opacity: 0, duration: .9 }, .45);
+        fadeUp(issue.querySelector('.issue_info'), issue.querySelector('.issue_info'), 30);
+    });
+
 });
