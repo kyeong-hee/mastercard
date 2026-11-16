@@ -241,7 +241,7 @@
                             <div class="swiper-slide">
                                 <div class="slide_img">
                                     <picture>
-                                        <img src="/img/main/we_hotel.jpg" alt="야경이 내려다보이는 호텔 객실">
+                                        <img src="/img/main/we_hotel.jpg" alt="야자수와 꽃 화단이 어우러진 리조트 호텔 정원">
                                     </picture>
                                 </div>
                                 <div class="slide_txt">
@@ -255,7 +255,7 @@
                             <div class="swiper-slide">
                                 <div class="slide_img">
                                     <picture>
-                                        <img src="/img/main/we_outlet.jpg" alt="쇼핑백을 든 채 명품 매장 쇼윈도를 바라보는 여성">
+                                        <img src="/img/main/we_outlet.jpg" alt="분수대가 있는 유럽풍 프리미엄 아울렛 거리">
                                     </picture>
                                 </div>
                                 <div class="slide_txt">
