@@ -98,9 +98,9 @@ $(function(){
             // MO 배경 빛 연결 : 시안(MO375) 배치는 그대로 두고, 02 광선 → 03 광선으로 이어줌
             //  - light1 : 화면 중앙에 오는 지점(시안 위치)부터 고정 → 스크롤 중 시안 light2 자리를 그대로 지나감
             //             (light2 는 light1 과 같은 이미지·크기라 숨기고 light1 이 그 자리를 대신함 = 시안 배치 동일)
-            //  - 고정된 light1 : 03 이 들어오는 동안(03 상단 화면 중앙 → 15%) 스크롤 연동으로 서서히 사라짐
-            //  - 03 배경 빛(light_benefit) : 03 진입 시(03 상단이 화면 15% 지점) 화면 바깥 오른쪽에서 시안 위치로 미끄러지며 페이드인
-            //             ※ 03 광선은 밝은 부분이 섹션 상단에서 약 400px 아래부터라, 그 부분이 화면에 충분히 들어온 시점에 재생
+            //  - 고정된 light1 : 03 이 들어오는 동안(03 상단 화면 하단 → 중앙) 스크롤 연동으로 서서히 사라짐
+            //  - 03 배경 빛(light_benefit) : 03 진입 시(03 상단이 화면 70% 지점) 화면 바깥 오른쪽에서 시안 위치로 미끄러지며 페이드인
+            //             (기존 15% 지점은 섹션에 들어온 뒤 한참 있다가 나타나는 느낌이라 앞당김 / 02 광선 페이드아웃과 겹쳐 이어짐)
             //             역스크롤로 03 위로 벗어나면 다시 오른쪽으로 빠지며 사라짐
             const benefit = lightBenefit.closest('.m_benefit');
             gsap.set(light2, { autoAlpha: 0 });
@@ -112,10 +112,10 @@ $(function(){
             });
             gsap.fromTo(light1, { autoAlpha: 1 }, {
                 autoAlpha: 0, ease: 'none',
-                scrollTrigger: { trigger: benefit, start: 'top center', end: 'top 15%', scrub: true },
+                scrollTrigger: { trigger: benefit, start: 'top bottom', end: 'top center', scrub: true },
             });
             const lbTl = gsap.timeline({
-                scrollTrigger: { trigger: benefit, start: 'top 15%', end: 'max', toggleActions: 'play none none reverse' },
+                scrollTrigger: { trigger: benefit, start: 'top 70%', end: 'max', toggleActions: 'play none none reverse' },
             })
                 // 시작 위치 : 화면 폭만큼 오른쪽(광선이 화면 밖) → 시안 위치
                 .fromTo(lightBenefit, { x: function(){ return window.innerWidth; } }, { x: 0, duration: 2.4, ease: 'power3.out' }, 0)
