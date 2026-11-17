@@ -183,9 +183,9 @@
                                 </ul>
                             </li>
                             <li class="box">
-                                <p class="tit">공항라운지 서비스</p>
+                                <p class="tit">공항라운지 서비스</p> 
                                 <ul class="dot_list">
-                                    <li>THE LOUNGE 전세계 공항라운지 무료 이용 (월 4회/연 20회)</li>
+                                    <li>THE LOUNGE (공항라운지) 서비스 무료 이용</li>
                                 </ul>
                             </li>
                         </ul>
