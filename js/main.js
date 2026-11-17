@@ -8,7 +8,7 @@ $(function(){
     // 02. 혜택 라인업 MOTION (참고 : mastercard_main_C_1.html 라인업 섹션 모션)
     //  ※ 디자인(위치·크기·이미지)은 피그마 시안 그대로, 모션만 적용
     //  - 배경 빛 : PC 02 ~ 03 스크롤 동안 화면 고정(광선 연속) → 03 끝에서 고정 해제
-    //             MO 시안 배치 유지 + 02 광선 고정 → 03 진입 시 03 광선이 오른쪽 화면 밖에서 페이드인
+    //             MO 도 PC 처럼 광선 하나를 02 ~ 03 끝까지 고정 + 스크롤 연동으로 점점 선명(50% → 100%) → 03 은 가장 선명한 배경 고정, 콘텐츠만 스크롤
     //  - 빛 스윕 : 섹션 진입 직후 마스크가 열리며 퍼짐 (최종 상태 = 시안 이미지)
     //  - 타이틀·설명 : PC 화면 고정, 이미지만 스크롤 → 섹션 끝나면 페이드아웃
     //  - 혜택 이미지 : 스크롤 등장 (MO 는 고정된 배경 위로 떠오르는 패럴랙스 추가)
@@ -95,32 +95,31 @@ $(function(){
                 },
             });
         } else {
-            // MO 배경 빛 연결 : 시안(MO375) 배치는 그대로 두고, 02 광선 → 03 광선으로 이어줌
-            //  - light1 : 화면 중앙에 오는 지점(시안 위치)부터 고정 → 스크롤 중 시안 light2 자리를 그대로 지나감
-            //             (light2 는 light1 과 같은 이미지·크기라 숨기고 light1 이 그 자리를 대신함 = 시안 배치 동일)
-            //  - 고정된 light1 : 03 이 들어오는 동안(03 상단 화면 하단 → 중앙) 스크롤 연동으로 서서히 사라짐
-            //  - 03 배경 빛(light_benefit) : 03 진입 시(03 상단이 화면 70% 지점) 화면 바깥 오른쪽에서 시안 위치로 미끄러지며 페이드인
-            //             (기존 15% 지점은 섹션에 들어온 뒤 한참 있다가 나타나는 느낌이라 앞당김 / 02 광선 페이드아웃과 겹쳐 이어짐)
-            //             역스크롤로 03 위로 벗어나면 다시 오른쪽으로 빠지며 사라짐
+            // MO 배경 빛 연결 (PC 와 같은 방식) : 광선 하나(light1)를 02 ~ 03 끝까지 고정해 끊김 없이 이어줌
+            //  - light1 : 화면 중앙에 오는 지점(시안 위치)부터 고정 → 03 끝까지 고정 유지
+            //             light1 하단이 공통 배경(.m_lineup_wrap) 하단에 닿는 지점에서 고정 해제 → 03 과 함께 자연스럽게 스크롤 아웃
+            //             (light2 · 03 배경 빛(light_benefit)은 고정 중에는 숨기고 light1 이 그 자리를 대신함)
+            //  - 밝기 : 고정 시작 50% → 03 상단이 화면 중앙에 올 때 100% (스크롤 연동으로 점점 선명해짐, 역스크롤 시 다시 흐려짐)
+            //  - 03 : 가장 선명한 상태로 배경 고정, 카드·문구만 위로 스크롤
             const benefit = lightBenefit.closest('.m_benefit');
-            gsap.set(light2, { autoAlpha: 0 });
-            gsap.set(lightBenefit, { autoAlpha: 0 });
+            gsap.set([light2, lightBenefit], { autoAlpha: 0 });
             ScrollTrigger.create({
                 trigger: light1, start: 'center center',
-                endTrigger: benefit, end: 'top top',
+                endTrigger: wrap,
+                // 고정된 light1 하단(화면 중앙 + 높이 절반)이 wrap 하단과 만나는 지점
+                end: function(){ return 'bottom ' + Math.round((window.innerHeight + light1.offsetHeight) / 2) + 'px'; },
                 pin: true, pinSpacing: false, invalidateOnRefresh: true,
             });
-            gsap.fromTo(light1, { autoAlpha: 1 }, {
-                autoAlpha: 0, ease: 'none',
-                scrollTrigger: { trigger: benefit, start: 'top bottom', end: 'top center', scrub: true },
+            gsap.fromTo(light1, { opacity: .5 }, {
+                opacity: 1, ease: 'none',
+                scrollTrigger: {
+                    // 시작 = 위 고정 시작 지점 (고정 대상(light1)을 트리거로 쓰지 않도록 wrap 기준으로 환산)
+                    trigger: wrap,
+                    start: function(){ return 'top ' + Math.round(window.innerHeight / 2 - light1.offsetTop - light1.offsetHeight / 2) + 'px'; },
+                    endTrigger: benefit, end: 'top center',
+                    scrub: true, invalidateOnRefresh: true,
+                },
             });
-            const lbTl = gsap.timeline({
-                scrollTrigger: { trigger: benefit, start: 'top 70%', end: 'max', toggleActions: 'play none none reverse' },
-            })
-                // 시작 위치 : 화면 폭만큼 오른쪽(광선이 화면 밖) → 시안 위치
-                .fromTo(lightBenefit, { x: function(){ return window.innerWidth; } }, { x: 0, duration: 2.4, ease: 'power3.out' }, 0)
-                .fromTo(lightBenefit, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.6, ease: 'sine.out' }, 0);
-            replayOnReenter(benefit, [lbTl]); // 03 을 벗어났다가 다시 들어오면 광선 등장 다시 재생
         }
 
         // 참고 HTML 이징 : --ease cubic-bezier(.22,.61,.36,1)
@@ -130,7 +129,7 @@ $(function(){
         //          ※ 모션 타이밍만 조정, 밝기·위치 등 디자인은 시안 그대로
         //          광선 마스크 경계(--draw)는 사선 라인 위치(약 .62)에서 시작해 이미지 끝(1.15)까지 열림
         //          PC 는 02 섹션이 화면 하단 20% 들어왔을 때 바로 시작 (기존 37% 노출 시점 → 초반 배경이 허전해 앞당김)
-        //          MO 는 02 light1 만 펼침 / 03 광선은 오른쪽 화면 밖에서 페이드인 (위 MO 배경 빛 연결)
+        //          MO 는 02 light1 만 펼침 (03 까지 light1 이 고정되어 이어짐 - 위 MO 배경 빛 연결)
         const lightImgs = [light1.querySelector('img')];
         const lightLine = light1.querySelector('.light_line path');
         // ※ 진입 시 재생 모션은 once:true 대신 end:'max' + toggleActions 'play none none none' 사용 (재진입 재생은 replayOnReenter 에서 처리)
