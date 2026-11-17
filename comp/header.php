@@ -8,10 +8,10 @@
     // 메뉴 정의 (상품 혜택 / 시즈널 혜택 경로는 페이지 생성 후 연결)
     $gnbMenu = [
         [
-            'name' => '상품 혜택', 'path' => '', 'href' => '#none',
+            'name' => '상품 혜택', 'path' => '/product/', 'href' => '/product/',
             'sub'  => [
-                ['name' => '카드 플레이트', 'href' => '#none'],
-                ['name' => '혜택 자세히 보기', 'href' => '#none'],
+                ['name' => '카드 플레이트', 'href' => '/product/#story'],
+                ['name' => '혜택 자세히 보기', 'href' => '/product/#benefits'],
             ],
         ],
         [
@@ -29,7 +29,7 @@
             ],
         ],
     ];
-    $applyUrl = '#none'; // 카드 신청하기 URL (확정 후 교체)
+    $applyUrl = '/card_reg.php'; // 카드 신청하기 URL (확정 후 교체)
 ?>
 <header class="header" id="header">
     <div class="wrap hd_inner" max="1440">
