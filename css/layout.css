@@ -183,7 +183,7 @@ button {background: none; border: 0; padding: 0; cursor: pointer; color: inherit
 	.header .gnb,
 	.header .hd_util {display: none;}
 	.header .hamWrap {display: block;}
-	.header .hd_logo img {width: 113px; height: 20px; object-fit: contain;}
+	.header .hd_logo img {width: 113px; height: auto;}
 
 	.header .mo_menu {display: block; position: fixed; top: var(--hd-h); left: 0; width: 100%; height: calc(var(--vh100) - var(--hd-h)); background-color: var(--c-ft-bg); color: #fff; overflow-y: auto; opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s;}
 	.header .mo_menu_inner {padding: 16px 33px 48px;}

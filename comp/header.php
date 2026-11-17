@@ -35,10 +35,7 @@
     <div class="wrap hd_inner" max="1440">
         <h1 class="hd_logo">
             <a href="/">
-                <picture>
-                    <source media="(max-width: 1024px)" srcset="/img/common/shinhan_logo_w.png">
-                    <img src="/img/common/logo_shinhancard.svg" alt="Shinhan Card">
-                </picture>
+                <img src="/img/common/logo_shinhancard.svg" alt="Shinhan Card">
             </a>
         </h1>
 
