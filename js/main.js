@@ -99,19 +99,24 @@ $(function(){
             //  - light1 : 화면 중앙에 오는 지점(시안 위치)부터 고정 → 03 끝까지 고정 유지
             //             light1 하단이 공통 배경(.m_lineup_wrap) 하단에 닿는 지점에서 고정 해제 → 03 과 함께 자연스럽게 스크롤 아웃
             //             (light2 · 03 배경 빛(light_benefit)은 고정 중에는 숨기고 light1 이 그 자리를 대신함)
-            //  - 밝기 : 고정 시작 50% → 03 상단이 화면 중앙에 올 때 100% (스크롤 연동으로 점점 선명해짐, 역스크롤 시 다시 흐려짐)
-            //  - 03 : 가장 선명한 상태로 배경 고정, 카드·문구만 위로 스크롤
+            //  - 선명해짐 : 고정 시작 ~ 03 상단이 화면 중앙에 올 때까지 스크롤 연동 (역스크롤 시 되돌아감)
+            //      · 밝기 50% → 100% (PC 와 동일)
+            //      · 광선 위·아래 그림자 걷힘 : 시작은 위·아래 끝을 어둡게 가려 짧은 광선(--fade 30%) → 그림자 없이 원래 길이(0%)
+            //      · 세로 길이 늘어남 : 광선 이미지(picture) 세로 1 → LIGHT_SY 배 (화면 중앙 기준)
+            //  - 03 : 가장 선명·가장 긴 상태로 배경 고정, 카드·문구만 위로 스크롤
             const benefit = lightBenefit.closest('.m_benefit');
+            const lightPic = light1.querySelector('picture');
+            const LIGHT_SY = 1.5; // 03 에서의 광선 세로 배율
             gsap.set([light2, lightBenefit], { autoAlpha: 0 });
             ScrollTrigger.create({
                 trigger: light1, start: 'center center',
                 endTrigger: wrap,
-                // 고정된 light1 하단(화면 중앙 + 높이 절반)이 wrap 하단과 만나는 지점
-                end: function(){ return 'bottom ' + Math.round((window.innerHeight + light1.offsetHeight) / 2) + 'px'; },
+                // 고정된 광선 하단(화면 중앙 + 늘어난 높이 절반)이 wrap 하단과 만나는 지점 → 고정 해제 시 잘림·튐 없이 이어짐
+                end: function(){ return 'bottom ' + Math.round((window.innerHeight + light1.offsetHeight * LIGHT_SY) / 2) + 'px'; },
                 pin: true, pinSpacing: false, invalidateOnRefresh: true,
             });
-            gsap.fromTo(light1, { opacity: .5 }, {
-                opacity: 1, ease: 'none',
+            // ※ 고정 대상(light1)의 transform 은 pin 이 사용하므로 세로 배율·마스크는 안쪽 picture 에 적용
+            gsap.timeline({
                 scrollTrigger: {
                     // 시작 = 위 고정 시작 지점 (고정 대상(light1)을 트리거로 쓰지 않도록 wrap 기준으로 환산)
                     trigger: wrap,
@@ -119,7 +124,9 @@ $(function(){
                     endTrigger: benefit, end: 'top center',
                     scrub: true, invalidateOnRefresh: true,
                 },
-            });
+            })
+                .fromTo(light1, { opacity: .5 }, { opacity: 1, ease: 'none' }, 0)
+                .fromTo(lightPic, { '--fade': '30%', scaleY: 1 }, { '--fade': '0%', scaleY: LIGHT_SY, ease: 'none' }, 0);
         }
 
         // 참고 HTML 이징 : --ease cubic-bezier(.22,.61,.36,1)
@@ -212,6 +219,7 @@ $(function(){
         return function(){
             lineup.classList.remove('is_out');
             gsap.set(light1, { clearProps: 'opacity,visibility' });
+            gsap.set(light1.querySelector('picture'), { clearProps: 'all' }); // MO 광선 세로 배율 · --fade 해제
             gsap.set(lightBenefit, { clearProps: 'all' });
         };
     });

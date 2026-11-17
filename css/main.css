@@ -325,6 +325,8 @@ body {background-color: #141415;}
 	.m_lineup_wrap .lineup_light {width: 100%; max-width: 500px; left: 0; right: 0; margin: 0 auto;}
 	.m_lineup_wrap .light1 {top: 40px;}
 	.m_lineup_wrap .light2 {top: 1038.43px;}
+	/* [모션] 광선 위·아래 그림자 : --fade 만큼 위·아래 끝을 가림 (JS 스크롤 연동 30% → 0%, 기본 0% = 시안 그대로) */
+	.m_lineup_wrap .light1 picture {-webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 var(--fade, 0%), #000 calc(100% - var(--fade, 0%)), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, #000 var(--fade, 0%), #000 calc(100% - var(--fade, 0%)), transparent 100%);}
 	.m_lineup {height: auto; padding: 100px 0;}
 	.m_lineup .lineup_inner {height: auto;}
 	.m_lineup .lineup_fix {position: static; height: auto; pointer-events: auto;}
