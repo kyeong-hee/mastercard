@@ -26,7 +26,7 @@ body {background-color: #141415;}
 }
 
 /* 공통 섹션 타이틀 (03 · 05) */
-.main .sec_tit {font-family: var(--f-suit); font-size: 36px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em;}
+.main .sec_tit {font-family: var(--f-suit); font-size: 54px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em;}
 
 /* 공통 라인 버튼 (상품 혜택 확인하기 · 시즈널 혜택 확인하기) */
 .main .btn_wrap {display: flex; justify-content: center;}
@@ -158,7 +158,7 @@ body {background-color: #141415;}
 /* ---------------------------------------------------------
 	05. 시즈널 혜택
 --------------------------------------------------------- */
-.m_season {background-color: #14161c; padding: 180px 0 200px;}
+.m_season {background-color: #14161c; padding: 180px 0 165px;}
 .m_season .season_top {display: flex; align-items: center; justify-content: space-between; gap: 20px;}
 
 .m_season .season_head {margin-top: 79.6px;}
@@ -218,7 +218,7 @@ body {background-color: #141415;}
 /* ---------------------------------------------------------
 	06. 발급
 --------------------------------------------------------- */
-.m_issue {position: relative; padding: 191px 0 105px; background-color: #101424;}
+.m_issue {position: relative; padding: 155px 0 165px; background-color: #101424;}
 .m_issue .issue_bg {position: absolute; inset: 0; background: url(/img/main/issue_bg.jpg) no-repeat center / cover;}
 .m_issue .issue_inner {position: relative; display: flex; flex-direction: column; align-items: center;}
 
