@@ -79,7 +79,7 @@ body {background-color: #141415;}
 .m_lineup .lineup_desc {font-family: var(--f-suit); font-size: 18px; line-height: 1.6; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap;}
 .m_lineup .lineup_desc b {font-weight: 600;}
 .m_lineup .lineup_desc_l {position: absolute; left: -3px; top: 469px; line-height: 30px;}
-.m_lineup .lineup_desc_r {position: absolute; right: 0; top: 862px; width: 368px;}
+/* .m_lineup .lineup_desc_r {position: absolute; right: 0; top: 862px; width: 368px;} */
 
 /* PC 카드 플레이트 : 시안 342 x 541 (1600 기준 21.375%) / 간격 38 */
 .m_lineup .lineup_card_pc {position: absolute; right: 0; top: 258px; display: flex; gap: 5.263%; width: 45.125%;}
@@ -272,7 +272,7 @@ body {background-color: #141415;}
 }
 
 @media screen and (max-width:1280px) {
-	.m_lineup .lineup_desc_r {top: 820px;}
+	/* .m_lineup .lineup_desc_r {top: 820px;} */
 	.m_lineup .item .desc {font-size: 16px; line-height: 1.6;}
 	.m_benefit .benefit_list {grid-template-columns: repeat(2, 1fr);}
 	.m_benefit .box {min-height: 300px;}

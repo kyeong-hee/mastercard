@@ -83,7 +83,7 @@
                             <img src="/img/main/lineup_card01.png" alt="The ACE Elite 카드 플레이트 - 마이신한 포인트형">
                             <img src="/img/main/lineup_card02.png" alt="The ACE Elite 카드 플레이트 - 스카이패스형">
                         </div>
-                        <p class="lineup_desc lineup_desc_r">비교할 수 없는 가치로 당신의 일상에 깊이를 더하는<br><span class="ko">신한 The ACE Elite만의 </span><b>독점적 혜택 라인업</b></p>
+                        <!-- <p class="lineup_desc lineup_desc_r">비교할 수 없는 가치로 당신의 일상에 깊이를 더하는<br><span class="ko">신한 The ACE Elite만의 </span><b>독점적 혜택 라인업</b></p> -->
 
                         <ul class="lineup_list">
                             <li class="item item1">
