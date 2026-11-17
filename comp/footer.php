@@ -2,7 +2,7 @@
     <div class="wrap ft_inner" max="1440">
         <div class="ft_top">
             <div class="ft_logo">
-                <img src="/img/common/shinhan_logo_w.png" alt="Shinhan Card" class="logo_shinhan">
+                <img src="/img/common/shinhan_logo_w.svg" alt="Shinhan Card" class="logo_shinhan">
                 <span class="bar" aria-hidden="true"></span>
                 <img src="/img/common/logo_mastercard.svg" alt="Mastercard" class="logo_master">
             </div>
