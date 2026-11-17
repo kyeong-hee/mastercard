@@ -8,13 +8,35 @@ $(function(){
     // 02. 혜택 라인업 MOTION (참고 : mastercard_main_C_1.html 라인업 섹션 모션)
     //  ※ 디자인(위치·크기·이미지)은 피그마 시안 그대로, 모션만 적용
     //  - 배경 빛 : PC 02 ~ 03 스크롤 동안 화면 고정(광선 연속) → 03 끝에서 고정 해제
-    //             MO 시안 배치 유지 + 02 광선 고정 → 03 광선으로 페이드 전환(광선 연속)
+    //             MO 시안 배치 유지 + 02 광선 고정 → 03 진입 시 03 광선이 오른쪽 화면 밖에서 페이드인
     //  - 빛 스윕 : 섹션 진입 직후 마스크가 열리며 퍼짐 (최종 상태 = 시안 이미지)
     //  - 타이틀·설명 : PC 화면 고정, 이미지만 스크롤 → 섹션 끝나면 페이드아웃
-    //  - 혜택 이미지 : 스크롤 등장
+    //  - 혜택 이미지 : 스크롤 등장 (MO 는 고정된 배경 위로 떠오르는 패럴랙스 추가)
+    //  - 02 · 03 등장 모션은 섹션을 완전히 벗어났다가 다시 들어오면 다시 재생 (아래 replayOnReenter)
     //  - prefers-reduced-motion : reduce 인 경우 미적용
     // ---------------------------------------------------------
     const mm = gsap.matchMedia();
+
+    // 섹션 재진입 시 모션 다시 재생 (02 · 03)
+    //  - 섹션이 화면에서 완전히 벗어나면(위·아래 모두) 등장 모션을 처음 상태로 되돌려 둠
+    //  - 위에서 다시 내려오면 : 각 모션의 원래 트리거 지점에서 다시 재생
+    //  - 아래에서 다시 올라오면 : 원래 트리거 지점을 이미 지난 상태라 섹션이 보이기 시작할 때 바로 다시 재생
+    //  - anims : 등장 timeline · tween 목록 / opt.reset · opt.replay : 추가 처리 (ScrollTrigger.batch 카드 등)
+    const replayOnReenter = function(section, anims, opt){
+        opt = opt || {};
+        const reset = function(){
+            anims.forEach(function(a){ a.pause(0); });
+            if(opt.reset) opt.reset();
+        };
+        return ScrollTrigger.create({
+            trigger: section, start: 'top bottom', end: 'bottom top',
+            onLeave: reset, onLeaveBack: reset,
+            onEnterBack: function(){
+                anims.forEach(function(a){ a.restart(); });
+                if(opt.replay) opt.replay();
+            },
+        });
+    };
 
     mm.add({
         isPC: '(min-width: 1025px)',
@@ -73,65 +95,95 @@ $(function(){
                 },
             });
         } else {
-            // MO 배경 빛 연결 : 시안(MO375) 배치는 그대로 두고, 광선 사이 빈 구간에서도 빛이 끊기지 않게 이어줌
+            // MO 배경 빛 연결 : 시안(MO375) 배치는 그대로 두고, 02 광선 → 03 광선으로 이어줌
             //  - light1 : 화면 중앙에 오는 지점(시안 위치)부터 고정 → 스크롤 중 시안 light2 자리를 그대로 지나감
             //             (light2 는 light1 과 같은 이미지·크기라 숨기고 light1 이 그 자리를 대신함 = 시안 배치 동일)
-            //  - 03 배경 빛(light_benefit) : 시안 위치·크기 그대로 노출 / 03 이 화면 중앙 → 상단에 오는 동안
-            //             고정된 light1 이 서서히 사라지며 03 광선으로 자연스럽게 넘어감
-            //             넘어가기 시작하는 시점(03 상단이 화면 중앙)에 03 광선도 펼침 모션 1회 재생 (아래 배경 빛 모션)
+            //  - 고정된 light1 : 03 이 들어오는 동안(03 상단 화면 중앙 → 15%) 스크롤 연동으로 서서히 사라짐
+            //  - 03 배경 빛(light_benefit) : 03 진입 시(03 상단이 화면 15% 지점) 화면 바깥 오른쪽에서 시안 위치로 미끄러지며 페이드인
+            //             ※ 03 광선은 밝은 부분이 섹션 상단에서 약 400px 아래부터라, 그 부분이 화면에 충분히 들어온 시점에 재생
+            //             역스크롤로 03 위로 벗어나면 다시 오른쪽으로 빠지며 사라짐
+            const benefit = lightBenefit.closest('.m_benefit');
             gsap.set(light2, { autoAlpha: 0 });
+            gsap.set(lightBenefit, { autoAlpha: 0 });
             ScrollTrigger.create({
                 trigger: light1, start: 'center center',
-                endTrigger: lightBenefit, end: 'top top',
+                endTrigger: benefit, end: 'top top',
                 pin: true, pinSpacing: false, invalidateOnRefresh: true,
             });
-            gsap.to(light1, {
-                opacity: 0, ease: 'none',
-                scrollTrigger: { trigger: lightBenefit, start: 'top center', end: 'top top', scrub: true, invalidateOnRefresh: true },
+            gsap.fromTo(light1, { autoAlpha: 1 }, {
+                autoAlpha: 0, ease: 'none',
+                scrollTrigger: { trigger: benefit, start: 'top center', end: 'top 15%', scrub: true },
             });
+            const lbTl = gsap.timeline({
+                scrollTrigger: { trigger: benefit, start: 'top 15%', end: 'max', toggleActions: 'play none none reverse' },
+            })
+                // 시작 위치 : 화면 폭만큼 오른쪽(광선이 화면 밖) → 시안 위치
+                .fromTo(lightBenefit, { x: function(){ return window.innerWidth; } }, { x: 0, duration: 2.4, ease: 'power3.out' }, 0)
+                .fromTo(lightBenefit, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.6, ease: 'sine.out' }, 0);
+            replayOnReenter(benefit, [lbTl]); // 03 을 벗어났다가 다시 들어오면 광선 등장 다시 재생
         }
 
         // 참고 HTML 이징 : --ease cubic-bezier(.22,.61,.36,1)
         const easeHtml = CustomEase.create('lineupEase', '.22,.61,.36,1');
 
-        // 배경 빛 : 사선 라인 드로잉(1s) → 라인에서 광선이 오른쪽으로 펼쳐짐(2.2s) → 라인 글로우 반복 / 섹션 진입 시 1회
+        // 배경 빛 : 사선 라인 드로잉(1s) → 라인에서 광선이 오른쪽으로 펼쳐짐(2.2s) → 라인 글로우 반복 / 섹션 진입 시 재생 (02~03 을 벗어났다가 다시 들어오면 재생)
         //          ※ 모션 타이밍만 조정, 밝기·위치 등 디자인은 시안 그대로
         //          광선 마스크 경계(--draw)는 사선 라인 위치(약 .62)에서 시작해 이미지 끝(1.15)까지 열림
         //          PC 는 02 섹션이 화면 하단 20% 들어왔을 때 바로 시작 (기존 37% 노출 시점 → 초반 배경이 허전해 앞당김)
-        //          MO 는 02 light1 + 03 광선(light_benefit) 각각 펼침 / 03 광선은 light1 → 03 광선 전환 시작 시점(03 상단이 화면 중앙)에 재생
-        const lightImgs = isPC ? [light1.querySelector('img')] : [light1.querySelector('img'), lightBenefit.querySelector('img')];
+        //          MO 는 02 light1 만 펼침 / 03 광선은 오른쪽 화면 밖에서 페이드인 (위 MO 배경 빛 연결)
+        const lightImgs = [light1.querySelector('img')];
         const lightLine = light1.querySelector('.light_line path');
-        // ※ 1회 재생 모션은 once:true 대신 end:'max' + toggleActions 'play none none none' 사용 (화면 동작 동일)
+        // ※ 진입 시 재생 모션은 once:true 대신 end:'max' + toggleActions 'play none none none' 사용 (재진입 재생은 replayOnReenter 에서 처리)
         //    once 트리거는 새로고침(스크롤 위치 복원) 시 위치 계산 도중 스스로 제거되어, 아래 04 섹션 pin 계산 중 ScrollTrigger 오류 발생
+        const lightTls = [];
+        let lineGlow = null; // PC 라인 글로우 반복 tween (재생할 때마다 새로 만들고 이전 것은 정리)
         lightImgs.forEach(function(img){
             gsap.set(img, { '--draw': isPC ? .62 : .6 });
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: isPC ? wrap : img.closest('.lineup_light'), end: 'max', toggleActions: 'play none none none',
-                    start: isPC ? 'top 80%' : (lightBenefit.contains(img) ? 'top center' : 'top 75%'),
+                    start: isPC ? 'top 80%' : 'top 75%',
                 },
             });
             if(isPC){
                 tl.fromTo(lightLine, { strokeDashoffset: 100 }, { strokeDashoffset: 0, duration: 1, ease: easeHtml }, 0)
                   .add(function(){
                       ctx.add(function(){ // 반복 tween 도 matchMedia 해제 시 함께 정리
-                          gsap.fromTo(lightLine, { opacity: .9 }, { opacity: .35, duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true });
+                          if(lineGlow) lineGlow.kill();
+                          lineGlow = gsap.fromTo(lightLine, { opacity: .9 }, { opacity: .35, duration: 2, ease: 'sine.inOut', repeat: -1, yoyo: true });
                       });
                   }, 2.9);
             }
             // 라인이 거의 그려진 시점(.7s)부터 광선이 라인에서 자연스럽게 퍼져 나감
             tl.to(img, { '--draw': 1.15, duration: isPC ? 2.2 : 2.6, ease: 'sine.inOut' }, isPC ? .7 : 0);
+            lightTls.push(tl);
+        });
+        // 배경 빛은 02 ~ 03 에 걸쳐 고정되므로 02 · 03 공통 배경(wrap) 전체를 벗어났다가 다시 들어오면 다시 재생
+        replayOnReenter(wrap, lightTls, {
+            reset: function(){
+                if(lineGlow){ lineGlow.kill(); lineGlow = null; }
+                if(lightLine) gsap.set(lightLine, { opacity: .9 });
+            },
         });
 
         // 혜택 이미지 스크롤 등장 (translateY 80 → 0 / opacity 1s, transform 1.2s)
+        const lineupTls = []; // 02 등장 모션 (섹션 재진입 시 다시 재생)
         gsap.utils.toArray('.item', lineup).forEach(function(item){
             // 참고 HTML : 이미지 20% 노출 시 (threshold .2)
-            gsap.timeline({ scrollTrigger: { trigger: item, end: 'max', toggleActions: 'play none none none', start: 'top bottom-=' + Math.round(item.offsetHeight * .2) } })
+            lineupTls[lineupTls.length] = gsap.timeline({ scrollTrigger: { trigger: item, end: 'max', toggleActions: 'play none none none', start: 'top bottom-=' + Math.round(item.offsetHeight * .2) } })
                 .from(item, { opacity: 0, duration: 1, ease: easeHtml }, 0)
                 .from(item, { y: 80, duration: 1.2, ease: easeHtml }, 0);
+            // MO : 고정된 배경 빛(light1) 위로 혜택 이미지·문구가 스크롤보다 빠르게 떠오르는 패럴랙스 (PC 처럼 배경 고정 + 이미지만 올라가는 느낌)
+            //      화면 하단 진입 ~ 상단 이탈 동안 y 100 → -100 (스크롤 연동) / 등장 모션(li)과 겹치지 않게 자식(.img · .txt)에 적용
+            if(!isPC){
+                gsap.fromTo(item.querySelectorAll('.img, .txt'), { y: 100 }, {
+                    y: -100, ease: 'none',
+                    scrollTrigger: { trigger: item, start: 'top bottom', end: 'bottom top', scrub: .5 },
+                });
+            }
         });
 
-        // 섹션 진입 시 타이틀(좌) · 카드 플레이트(우) 페이드인 / 1회
+        // 섹션 진입 시 타이틀(좌) · 카드 플레이트(우) 페이드인 (02 를 벗어났다가 다시 들어오면 다시 재생)
         //  - 요소별로 각자 화면 하단 80% 지점에 들어올 때 시작 (섹션 기준 일괄 실행 시 MO 타이틀은 화면 밖에서 모션이 끝남)
         //  - PC : 타이틀·카드가 같은 높이라 카드 플레이트는 .2s 뒤 / MO : 카드(상단) → 타이틀 순으로 스크롤에 따라 등장
         //  - 타이틀은 겹침 방지 스크롤 페이드(.lineup_tit · .lineup_desc_l)와 충돌하지 않도록 래퍼(.lineup_fix_in)에 적용
@@ -146,7 +198,7 @@ $(function(){
             { box: lineup.querySelector(isPC ? '.lineup_card_pc' : '.lineup_card'), delay: isPC ? .2 : 0 },
         ].forEach(function(o){
             if(!o.box) return;
-            gsap.timeline({
+            lineupTls[lineupTls.length] = gsap.timeline({
                 scrollTrigger: {
                     // ※ invalidateOnRefresh 사용 금지 : from 시작값(opacity 0)을 최종값으로 다시 기록해 모션이 사라짐 (start 함수는 리프레시마다 재계산됨)
                     trigger: lineup, end: 'max', toggleActions: 'play none none none',
@@ -156,10 +208,12 @@ $(function(){
                 .from(o.box, { opacity: 0, duration: 1, ease: easeHtml }, o.delay)
                 .from(o.box, { y: 60, duration: 1.2, ease: easeHtml }, o.delay);
         });
+        replayOnReenter(lineup, lineupTls); // 02 를 벗어났다가 다시 들어오면 타이틀·카드·혜택 이미지 등장 다시 재생
 
         return function(){
             lineup.classList.remove('is_out');
-            gsap.set(light1, { clearProps: 'opacity' });
+            gsap.set(light1, { clearProps: 'opacity,visibility' });
+            gsap.set(lightBenefit, { clearProps: 'all' });
         };
     });
 
@@ -471,6 +525,7 @@ $(function(){
     //  - 섹션 제목 : 스크롤 도달 시 fade-left (오른쪽 → 제자리)
     //  - 카드·리스트 : 스크롤 도달 시 fade-up 순차 등장 (ScrollTrigger.batch - 화면에 함께 들어온 항목끼리 순차, MO 세로 나열도 각자 도달 시점에 등장)
     //  - 진입 시 재생 / 위로 벗어나면 되감기 → 다시 내려오면 반복 (참고 페이지와 동일)
+    //    03 은 아래로 벗어났다가 다시 올라와도 재생 (replayOnReenter)
     //  - 02 혜택 라인업은 기존 모션 유지 (미적용)
     //  - ※ 04 · 06 은 pin · 마우스 따라다니기 · 틸트 모션과 충돌하지 않도록 대상 요소를 분리
     //       04 : pin 위치 계산에 쓰이는 .we_swiper 대신 내부 이미지·문구·라인에 적용
@@ -484,14 +539,14 @@ $(function(){
 
         // 섹션 제목 영역 : fade-left
         const fadeLeft = function(targets, trigger){
-            gsap.from(targets, {
+            return gsap.from(targets, {
                 opacity: 0, x: 60, duration: 1, ease: ease, stagger: .12,
                 scrollTrigger: Object.assign({ trigger: trigger }, reveal),
             });
         };
         // 단일 요소·묶음 : fade-up
         const fadeUp = function(targets, trigger, y){
-            gsap.from(targets, {
+            return gsap.from(targets, {
                 opacity: 0, y: y || 50, duration: .9, ease: ease, stagger: .12,
                 scrollTrigger: Object.assign({ trigger: trigger }, reveal),
             });
@@ -499,13 +554,15 @@ $(function(){
         // 카드·리스트 : 항목별 도달 시 fade-up 순차 (역스크롤로 위로 벗어나면 다시 숨김)
         const batchUp = function(targets){
             targets = gsap.utils.toArray(targets);
-            if(!targets.length) return;
+            if(!targets.length) return targets;
             gsap.set(targets, { opacity: 0, y: 50 });
             ScrollTrigger.batch(targets, {
                 start: reveal.start,
-                onEnter: function(b){ gsap.to(b, { opacity: 1, y: 0, duration: .9, ease: ease, stagger: .1, overwrite: true }); },
+                // ※ 빠르게 스크롤해 섹션을 지나쳐 버린 카드는 제외 (섹션 이탈 시 숨김 처리와 충돌 방지 - replayOnReenter)
+                onEnter: function(b){ b = b.filter(function(el){ return ScrollTrigger.isInViewport(el); }); if(b.length) gsap.to(b, { opacity: 1, y: 0, duration: .9, ease: ease, stagger: .1, overwrite: true }); },
                 onLeaveBack: function(b){ gsap.to(b, { opacity: 0, y: 50, duration: .5, ease: 'power2.in', overwrite: true }); },
             });
+            return targets;
         };
 
         // 01. 비주얼
@@ -515,9 +572,16 @@ $(function(){
             .from(vis.querySelectorAll('.vis_tit .ln'), { opacity: 0, y: 40, duration: 1, stagger: .14 }, .35);
 
         // 03. 프리미엄 혜택
-        fadeLeft('.m_benefit .sec_tit', '.m_benefit .sec_tit');
-        batchUp('.m_benefit .benefit_list > li');
-        fadeUp('.m_benefit .benefit_note, .m_benefit .btn_wrap', '.m_benefit .benefit_note', 30);
+        //  - 섹션을 완전히 벗어났다가(위·아래) 다시 들어오면 타이틀 · 카드 · 하단 문구 등장 다시 재생 (replayOnReenter : 02. 혜택 라인업 MOTION 상단)
+        const benefitCards = batchUp('.m_benefit .benefit_list > li');
+        replayOnReenter('.m_benefit', [
+            fadeLeft('.m_benefit .sec_tit', '.m_benefit .sec_tit'),
+            fadeUp('.m_benefit .benefit_note, .m_benefit .btn_wrap', '.m_benefit .benefit_note', 30),
+        ], {
+            reset: function(){ gsap.killTweensOf(benefitCards); gsap.set(benefitCards, { opacity: 0, y: 50 }); },
+            // 아래에서 다시 올라올 때 : 카드 트리거 지점을 이미 지난 상태라 직접 재생 (화면 아래쪽 카드부터 순차)
+            replay: function(){ gsap.to(benefitCards, { opacity: 1, y: 0, duration: .9, ease: ease, stagger: { each: .1, from: 'end' }, overwrite: true }); },
+        });
 
         // 04. World Elite 등급 혜택
         fadeLeft('.m_we .we_fix > *', '.m_we .we_fix');
