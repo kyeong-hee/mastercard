@@ -95,7 +95,7 @@
                                 </div>
                                 <div class="txt">
                                     <p class="tit">일상과 여행을 아우르는 프리미엄 혜택</p>
-                                    <p class="desc"><span class="pc_only">최대 90만원의 기프트, 골프, 공항 라운지 등<br>프리미엄 라이프스타일에 딱 맞는 혜택</span><span class="mo_only">연간 기프트, 리워드, 골프 및 여행 혜택까지</span></p>
+                                    <p class="desc">최대 90만원의 기프트, 골프, 공항 라운지 등<br>프리미엄 라이프스타일에 딱 맞는 혜택</p>
                                 </div>
                             </li>
                             <li class="item item2">
@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="txt">
                                     <p class="tit">Mastercard World Elite 특전</p>
-                                    <p class="desc"><span class="pc_only">세계 곳곳에서 누리는 프리미엄 라이프스타일<br>글로벌 다이닝, 공연, 호텔 혜택 및 숙박 우대 혜택</span><span class="mo_only">World Elite 고객만 누리는 여행, 호텔, 다이닝,<br>쇼핑영역 글로벌 혜택</span></p>
+                                    <p class="desc">세계 곳곳에서 누리는 프리미엄 라이프스타일<br>글로벌 다이닝, 공연, 호텔 혜택 및 숙박 우대 혜택</p>
                                 </div>
                             </li>
                             <li class="item item3">
@@ -118,8 +118,8 @@
                                     </picture>
                                 </div>
                                 <div class="txt">
-                                    <p class="tit"><span class="pc_only">최고급 파인다이닝 &amp; 하이엔드 골프 경험</span><span class="mo_only">시즌마다 새롭게 만나는 파인다이닝과<br>하이엔드 골프 경험</span></p>
-                                    <p class="desc pc_only">프리미엄 다이닝 1인무료와 JB 골프 클럽 혜택까지</p>
+                                    <p class="tit">최고급 파인다이닝 &amp; 하이엔드 골프 경험</p>
+                                    <p class="desc">프리미엄 다이닝 1인무료와 JB 골프 클럽 혜택까지</p>
                                 </div>
                             </li>
                         </ul>
