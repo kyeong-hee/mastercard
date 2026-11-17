@@ -178,7 +178,7 @@
                             <li class="box">
                                 <p class="tit">Golf 서비스</p>
                                 <ul class="dot_list">
-                                    <li>제휴 골프장 주중 우대 혜택 제공</li>
+                                    <li>제휴 골프장 무료상담, 예약 대행 서비스 제공</li>
                                     <li>골프 홀인원 축하금 300만원 제공</li>
                                 </ul>
                             </li>
