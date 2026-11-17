@@ -172,7 +172,7 @@
                             <li class="box">
                                 <p class="tit">Sweet Celebration 서비스</p>
                                 <ul class="dot_list">
-                                    <li>국내 제휴 특급호텔 베이커리 Cake 5만원 현장 할인</li>
+                                    <li>국내 제휴 특급호텔 베이커리 <br class="mo_only">Cake 5만원 현장 할인</li>
                                 </ul>
                             </li>
                             <li class="box">
