@@ -411,6 +411,8 @@ $(function(){
     //  - 따라다니는 영역 : 섹션 전체 (토글 버튼 + 주변 16px 제외), 버튼은 섹션 하단을 넘지 않음
     //  - 커서가 푸터로 내려가면 버튼은 마지막 위치에 멈춤 (푸터 버튼과 겹치지 않게 푸터 안으로는 따라가지 않음)
     //  - 토글(마이신한 포인트 / 스카이패스) 보호 : 토글 위에서는 따라다니지 않고, 버튼도 토글을 피해 바깥으로 비켜감 (겹치지 않음)
+    //    → 이동 중에도 토글을 가로지르지 않고 토글 모서리를 돌아서 이동 (버튼은 토글 주변까지만 접근)
+    //  - 섹션 위에 떠 있는 다른 요소(푸터 관련사이트 목록, 우측 퀵메뉴, 헤더 등) 위에서는 따라다니지 않음
     //  - 영역을 벗어나거나(푸터·섹션 위·토글 위 등) 토글을 클릭해도 시안 위치로 돌아가지 않고 가장 최근 위치에 그대로 머묾
     //  - 따라다니는 동안 영역 클릭 = 신청하기 링크 클릭 (a·button 은 기존 동작 유지)
     //  - 링크 : $applyUrl (comp/header.php, 신청 페이지 확정 후 교체)
@@ -430,11 +432,56 @@ $(function(){
         const pos = { x: 0, y: 0 };
         let mx = -1, my = -1, inside = false;
 
+        const EPS = .5;          // 경계선 위는 겹침으로 보지 않음 (토글 테두리를 따라 비켜갈 수 있게)
+
+        // 선분 P→Q 가 박스 b 내부를 지나는지 (Liang–Barsky, 경계선만 스치는 건 통과)
+        function hitsBox(px, py, qx, qy, b){
+            const dx = qx - px, dy = qy - py;
+            const p = [-dx, dx, -dy, dy];
+            const q = [px - (b.l + EPS), (b.r - EPS) - px, py - (b.t + EPS), (b.b - EPS) - py];
+            let t0 = 0, t1 = 1;
+            for(let i = 0; i < 4; i++){
+                if(p[i] === 0){ if(q[i] <= 0) return false; continue; }
+                const u = q[i] / p[i];
+                if(p[i] < 0){ if(u > t1) return false; if(u > t0) t0 = u; }
+                else { if(u < t0) return false; if(u < t1) t1 = u; }
+            }
+            return t0 < t1;
+        }
+        // 현재 위치 → 목표 까지 토글(박스)을 관통하지 않는 최단 경로 (직선 / 모서리 1개 경유 / 인접 모서리 2개 경유)
+        function route(px, py, tx, ty, b){
+            if(!hitsBox(px, py, tx, ty, b)) return [[tx, ty]];
+            const c = [[b.l, b.t], [b.r, b.t], [b.r, b.b], [b.l, b.b]];
+            const dist = function(a, z){ return Math.hypot(z[0] - a[0], z[1] - a[1]); };
+            const P = [px, py], T = [tx, ty];
+            let best = null, bestLen = Infinity;
+            for(let i = 0; i < 4; i++){
+                const ci = c[i];
+                if(hitsBox(px, py, ci[0], ci[1], b)) continue;
+                const d1 = dist(P, ci);
+                if(!hitsBox(ci[0], ci[1], tx, ty, b)){
+                    const len = d1 + dist(ci, T);
+                    if(len < bestLen){ bestLen = len; best = [ci, T]; }
+                }
+                [c[(i + 1) % 4], c[(i + 3) % 4]].forEach(function(cj){
+                    if(hitsBox(cj[0], cj[1], tx, ty, b)) return;
+                    const len = d1 + dist(ci, cj) + dist(cj, T);
+                    if(len < bestLen){ bestLen = len; best = [ci, cj, T]; }
+                });
+            }
+            return best || [T];
+        }
+
         function update(){
             const sr = issue.getBoundingClientRect();
             const ir = issueInner.getBoundingClientRect();
             const tr = issueToggle.getBoundingClientRect();
-            const inSection = mx >= sr.left && mx <= sr.right && my >= sr.top && my <= sr.bottom;   // 푸터에 들어가면 바로 멈춤
+            // 섹션 위에 다른 요소(푸터 관련사이트 목록, 퀵메뉴, 헤더 등)가 떠 있으면 그 위에서는 따라다니지 않음
+            let inSection = mx >= sr.left && mx <= sr.right && my >= sr.top && my <= sr.bottom;   // 푸터에 들어가면 바로 멈춤
+            if(inSection){
+                const hit = document.elementFromPoint(mx, my);
+                inSection = !!hit && issue.contains(hit);
+            }
             const onToggle = mx >= tr.left - TOGGLE_GAP && mx <= tr.right + TOGGLE_GAP && my >= tr.top - TOGGLE_GAP && my <= tr.bottom + TOGGLE_GAP;
             const now = inSection && !onToggle;
 
@@ -446,24 +493,45 @@ $(function(){
                 applyBtn.classList.toggle('is_moving', inside);
             }
 
+            // 버튼 원래 위치(transform 제외) 중심 기준 좌표계 (pos 와 같은 좌표)
+            const w = applyBtn.offsetWidth, h = applyBtn.offsetHeight;
+            const ox = ir.left + applyBtn.offsetLeft + w / 2;
+            const oy = ir.top + applyBtn.offsetTop + h / 2;
+            // 버튼 중심이 들어오면 토글과 겹치는 영역 (토글 + TOGGLE_GAP + 버튼 반지름)
+            const box = {
+                l: tr.left - TOGGLE_GAP - w / 2 - ox, r: tr.right + TOGGLE_GAP + w / 2 - ox,
+                t: tr.top - TOGGLE_GAP - h / 2 - oy, b: tr.bottom + TOGGLE_GAP + h / 2 - oy
+            };
+
             if(inside){
-                // 버튼 원래 위치(transform 제외) 중심 → 커서 (섹션 밖으로 나가지 않게 제한, 아래쪽은 푸터와 FOOTER_GAP 만큼 띄움)
-                const w = applyBtn.offsetWidth, h = applyBtn.offsetHeight;
-                const ox = ir.left + applyBtn.offsetLeft + w / 2;
-                const oy = ir.top + applyBtn.offsetTop + h / 2;
-                let cx = gsap.utils.clamp(sr.left + w / 2, sr.right - w / 2, mx);
-                let cy = gsap.utils.clamp(sr.top + h / 2, sr.bottom - FOOTER_GAP - h / 2, my);
-                // 버튼이 토글과 겹치게 되면 가장 가까운 바깥쪽(상/하/좌/우)으로 밀어냄
-                const el = tr.left - TOGGLE_GAP - w / 2, er = tr.right + TOGGLE_GAP + w / 2;
-                const et = tr.top - TOGGLE_GAP - h / 2, eb = tr.bottom + TOGGLE_GAP + h / 2;
-                if(cx > el && cx < er && cy > et && cy < eb){
-                    const d = { l: cx - el, r: er - cx, t: cy - et, b: eb - cy };
+                // 목표 = 커서 (섹션 밖으로 나가지 않게 제한, 아래쪽은 푸터와 FOOTER_GAP 만큼 띄움)
+                let tx = gsap.utils.clamp(sr.left + w / 2, sr.right - w / 2, mx) - ox;
+                let ty = gsap.utils.clamp(sr.top + h / 2, sr.bottom - FOOTER_GAP - h / 2, my) - oy;
+                // 목표가 토글과 겹치면 가장 가까운 바깥쪽(상/하/좌/우)으로 밀어냄
+                if(tx > box.l && tx < box.r && ty > box.t && ty < box.b){
+                    const d = { l: tx - box.l, r: box.r - tx, t: ty - box.t, b: box.b - ty };
                     const m = Math.min(d.l, d.r, d.t, d.b);
-                    if(m === d.t) cy = et; else if(m === d.b) cy = eb; else if(m === d.l) cx = el; else cx = er;
+                    if(m === d.t) ty = box.t; else if(m === d.b) ty = box.b; else if(m === d.l) tx = box.l; else tx = box.r;
                 }
+                // 이동 중에도 토글을 가로지르지 않도록 토글 모서리를 돌아서 감
+                //  - 남은 경로 길이의 k 만큼 경로를 따라 전진 (기존 lerp 와 같은 속도감)
+                const path = route(pos.x, pos.y, tx, ty, box);
+                let len = 0, px = pos.x, py = pos.y;
+                path.forEach(function(pt){ len += Math.hypot(pt[0] - px, pt[1] - py); px = pt[0]; py = pt[1]; });
                 const k = 1 - Math.pow(1 - FOLLOW, gsap.ticker.deltaRatio());   // 프레임레이트 무관
-                pos.x += (cx - ox - pos.x) * k;
-                pos.y += (cy - oy - pos.y) * k;
+                let step = len * k;
+                for(let i = 0; i < path.length && step > 0; i++){
+                    const sx = path[i][0] - pos.x, sy = path[i][1] - pos.y;
+                    const seg = Math.hypot(sx, sy);
+                    if(seg <= step){ pos.x = path[i][0]; pos.y = path[i][1]; step -= seg; }
+                    else { pos.x += sx / seg * step; pos.y += sy / seg * step; step = 0; }
+                }
+            }
+            // 안전장치 : 어떤 경우든(리사이즈·레이아웃 변화 등) 버튼이 토글과 겹쳐 있으면 가장 가까운 바깥쪽으로 밀어냄
+            if(pos.x > box.l + EPS && pos.x < box.r - EPS && pos.y > box.t + EPS && pos.y < box.b - EPS){
+                const d = { l: pos.x - box.l, r: box.r - pos.x, t: pos.y - box.t, b: box.b - pos.y };
+                const m = Math.min(d.l, d.r, d.t, d.b);
+                if(m === d.t) pos.y = box.t; else if(m === d.b) pos.y = box.b; else if(m === d.l) pos.x = box.l; else pos.x = box.r;
             }
             setX(pos.x);
             setY(pos.y);
