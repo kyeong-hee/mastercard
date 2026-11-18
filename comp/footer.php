@@ -29,7 +29,7 @@
         <div class="ft_cs">
             <div class="cs_box cs_main">
                 <p class="cs_tit">신한카드 고객센터</p>
-                <a href="tel:1544-7000" class="cs_num">1544-7000</a>
+                <a href="tel:1566-8357" class="cs_num">1566-8357</a>
             </div>
             <div class="cs_box cs_concierge">
                 <p class="cs_tit">Mastercard 월드엘리트 컨시어지</p>
