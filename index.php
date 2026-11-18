@@ -66,15 +66,15 @@
                 <section class="m_lineup">
                     <div class="wrap lineup_inner" max="1600">
                         <div class="lineup_card mo_only">
-                            <img src="/img/main/lineup_card1_mo.png" alt="The ACE Elite 카드 플레이트">
-                            <img src="/img/main/lineup_card2_mo.png" alt="The ACE Elite 카드 플레이트">
+                            <img src="/img/main/lineup_card01.png" alt="The ACE Elite 카드 플레이트 - 마이신한 포인트형">
+                            <img src="/img/main/lineup_card02.png" alt="The ACE Elite 카드 플레이트 - 스카이패스형">
                         </div>
 
                         <!-- PC : 타이틀·설명 고정 / 이미지만 스크롤 -->
                         <div class="lineup_fix">
                             <div class="lineup_fix_in">
                                 <h2 class="lineup_tit">당신의 기준을 높이는,<br><b>하나의 카드</b></h2>
-                                <p class="lineup_desc lineup_desc_l pc_only">비교할 수 없는 가치로 당신의 일상에 깊이를 더하는<br>신한 The ACE Elite만의 <b>독점적 혜택 라인업</b></p>
+                                <p class="lineup_desc lineup_desc_l">비교할 수 없는 가치로 당신의 일상에 깊이를 더하는<br>신한 The ACE Elite만의 <b>독점적 혜택 라인업</b></p>
                             </div>
                         </div>
 
