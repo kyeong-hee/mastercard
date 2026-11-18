@@ -326,7 +326,7 @@
                                 </li>
                                 <li class="swiper-slide">
                                     <div class="img"><img src="/img/main/dining08.jpg" alt="" draggable="false"></div>
-                                    <p class="name">소공간다이닝</p>
+                                    <p class="name">소공간 다이닝</p>
                                 </li>
                             </ul>
                         </div>
