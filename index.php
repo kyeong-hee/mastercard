@@ -377,7 +377,7 @@
                 <div class="wrap issue_inner" max="1600">
                     <h2 class="issue_tit">
                         <span class="pc_only">Live Beyond Ordinary.<br>The ACE Elite로 완성하는 특별한 일상</span>
-                        <span class="mo_only">THE ACE Elite만의<br><b>특별한 혜택</b>과<br>프라이빗 라이프스타일을<br>소유할 시간.</span>
+                        <span class="mo_only">Live Beyond Ordinary.<br>The ACE Elite로<br>완성하는 특별한 일상</span>
                     </h2>
 
                     <div class="issue_card">
