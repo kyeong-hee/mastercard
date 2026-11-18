@@ -51,16 +51,23 @@ $(function(){
         const light2 = wrap.querySelector('.light2');
         const light3 = wrap.querySelector('.light3');
         const lightBenefit = wrap.querySelector('.light_benefit'); // MO 03 배경 빛
+        // 03 → 04 전환 기준값 (아래 '03 → 04 전환' 참고 / 화면 높이 비율)
+        const STOP_AT = .45;  // 광선이 03 과 함께 올라가기 시작하는 구도 = wrap 하단(04 상단)이 화면 위에서 45% 지점에 왔을 때의 모습
+        const RAMP = .4;      // 멈춤 → 스크롤 속도로 가속되는 스크롤 거리
+        const rampDist = function(){ return Math.round(window.innerHeight * RAMP); };
+        const rampStartY = function(){ return Math.round(window.innerHeight * STOP_AT + rampDist() / 2); }; // 가속 시작 시 wrap 하단 위치(화면 기준 px)
+        const rampEndY = function(){ return Math.round(window.innerHeight * STOP_AT - rampDist() / 2); };   // 가속 끝 = 고정 해제 시 wrap 하단 위치
 
         if(isPC){
             // 배경 빛 고정 : 02 시작 ~ 03 끝까지 light1 하나를 계속 고정해 광선이 끊기지 않고 03 까지 이어지게 함
-            //               light1 하단이 공통 배경(.m_lineup_wrap) 하단에 닿는 지점에서 고정 해제 → 03 과 함께 자연스럽게 스크롤 아웃
+            //               03 끝에서 04 가 광선을 일부 덮은 구도(STOP_AT)에서 광선이 03 과 함께 스크롤 아웃 (아래 '03 → 04 전환')
             //               (light2 · light3 은 동일 이미지라 고정 중에는 숨기고 light1 이 그 자리를 대신함 / 03 시점 배치 ≒ 시안 light3 위치)
             //               시안 opacity : light1 50% → light2 100% 이므로 light2 위치까지 50% → 100% 로 전환(스크롤 연동), 이후 100% 유지 = 시안 그대로
             gsap.set([light2, light3], { autoAlpha: 0 });
             ScrollTrigger.create({
+                // 고정 해제 = 04 상단이 STOP_AT 구도를 지나 가속이 끝나는 지점 (아래 '03 → 04 전환')
                 trigger: wrap, start: 'top top',
-                end: function(){ return '+=' + Math.max(0, wrap.offsetHeight - light1.offsetHeight); },
+                end: function(){ return 'bottom ' + rampEndY() + 'px'; },
                 pin: light1, pinSpacing: false, invalidateOnRefresh: true,
             });
             gsap.fromTo(light1, { opacity: .5 }, {
@@ -97,7 +104,7 @@ $(function(){
         } else {
             // MO 배경 빛 연결 (PC 와 같은 방식) : 광선 하나(light1)를 02 ~ 03 끝까지 고정해 끊김 없이 이어줌
             //  - light1 : 화면 중앙에 오는 지점(시안 위치)부터 고정 → 03 끝까지 고정 유지
-            //             light1 하단이 공통 배경(.m_lineup_wrap) 하단에 닿는 지점에서 고정 해제 → 03 과 함께 자연스럽게 스크롤 아웃
+            //             03 끝에서 04 가 광선을 일부 덮은 구도(STOP_AT)에서 광선이 03 과 함께 스크롤 아웃 (아래 '03 → 04 전환')
             //             (light2 · 03 배경 빛(light_benefit)은 고정 중에는 숨기고 light1 이 그 자리를 대신함)
             //  - 선명해짐 : 고정 시작 ~ 03 상단이 화면 중앙에 올 때까지 스크롤 연동 (역스크롤 시 되돌아감)
             //      · 밝기 50% → 100% (PC 와 동일)
@@ -110,9 +117,9 @@ $(function(){
             gsap.set([light2, lightBenefit], { autoAlpha: 0 });
             ScrollTrigger.create({
                 trigger: light1, start: 'center center',
+                // 고정 해제 = 04 상단이 STOP_AT 구도를 지나 가속이 끝나는 지점 (아래 '03 → 04 전환')
                 endTrigger: wrap,
-                // 고정된 광선 하단(화면 중앙 + 늘어난 높이 절반)이 wrap 하단과 만나는 지점 → 고정 해제 시 잘림·튐 없이 이어짐
-                end: function(){ return 'bottom ' + Math.round((window.innerHeight + light1.offsetHeight * LIGHT_SY) / 2) + 'px'; },
+                end: function(){ return 'bottom ' + rampEndY() + 'px'; },
                 pin: true, pinSpacing: false, invalidateOnRefresh: true,
             });
             // ※ 고정 대상(light1)의 transform 은 pin 이 사용하므로 세로 배율·마스크는 안쪽 picture 에 적용
@@ -128,6 +135,27 @@ $(function(){
                 .fromTo(light1, { opacity: .5 }, { opacity: 1, ease: 'none' }, 0)
                 .fromTo(lightPic, { '--fade': '30%', scaleY: 1 }, { '--fade': '0%', scaleY: LIGHT_SY, ease: 'none' }, 0);
         }
+
+        // 03 → 04 전환 (PC · MO 공통)
+        //  - 기존 : 광선 하단이 wrap 하단에 닿는 순간 고정 해제 → 멈춰 있던 광선이 갑자기 스크롤 속도로 움직이고, 광선 하단이 일직선으로 잘린 채 올라가 '탁' 끊기는 느낌
+        //  - 수정 : 광선은 밝기 그대로 03 끝까지 고정 → 04 가 올라오며 아래쪽부터 덮다가,
+        //           STOP_AT 구도(04 상단이 화면 위에서 45% 지점)에서 광선이 03 과 함께 올라가기 시작 → 그 구도 그대로 화면 밖으로 빠져나감
+        //           (계속 고정하면 04 가 광선을 끝까지 덮어 광선이 사라지는 느낌 / 바로 고정 해제하면 멈춰 있던 광선이 갑자기 움직여 '탁' 끊기는 느낌)
+        //           · 가속 구간 : 고정을 유지한 채 안쪽(picture · svg)을 y 0 → -rampDist/2 로 이동 (power1.in = 2차 곡선)
+        //             → 속도 0 에서 시작해 구간 끝에서 스크롤 속도와 같아짐 → 그 지점에서 고정 해제해도 속도 변화 없이 그대로 이어짐 (역스크롤 시 반대로 감속 → 다시 고정)
+        //             가속 중 광선이 콘텐츠보다 rampDist/2 덜 올라가므로 STOP_AT 앞뒤로 rampDist/2 씩 구간을 잡아 최종 구도 = STOP_AT 구도
+        //           · 광선 하단은 항상 wrap 하단보다 아래 → 잘린 경계 대신 04 상단이 깔끔한 경계가 됨
+        //             (wrap 밖으로 나온 부분 : PC = wrap overflow 로 잘림 / MO = 04(.m_we)가 광선보다 위(z-index)에서 가림 - fixed 고정은 overflow 로 잘리지 않음)
+        //             ※ clip-path 로 잘라내는 방식은 iOS 사파리에서 fixed 광선이 스크롤 중 사라질 수 있어 사용하지 않음
+        //  - light1 자체 transform 은 pin 이 사용하므로 안쪽 요소(picture · svg)에 적용 (MO picture 세로 배율 scaleY 와는 별도 속성이라 공존)
+        gsap.fromTo(light1.children, { y: 0 }, {
+            y: function(){ return -rampDist() / 2; }, ease: 'power1.in',
+            scrollTrigger: {
+                trigger: wrap, scrub: true, invalidateOnRefresh: true,
+                start: function(){ return 'bottom ' + rampStartY() + 'px'; },
+                end: function(){ return 'bottom ' + rampEndY() + 'px'; },
+            },
+        });
 
         // 참고 HTML 이징 : --ease cubic-bezier(.22,.61,.36,1)
         const easeHtml = CustomEase.create('lineupEase', '.22,.61,.36,1');

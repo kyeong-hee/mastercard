@@ -52,6 +52,10 @@ body {background-color: #141415;}
 /* ---------------------------------------------------------
 	02~03. 혜택 라인업 + 상품 혜택 (공통 배경)
 --------------------------------------------------------- */
+/* [모션] 03 → 04 전환 : 04 가 광선 아래쪽을 일부 덮은 구도에서 광선이 서서히 가속하며 03 과 함께 빠져나감 (js/main.js '03 → 04 전환')
+   - wrap 하단 밖으로 나온 광선 : 고정된 광선(MO 는 position:fixed)은 overflow 로 잘리지 않으므로
+     04(.m_we)를 광선보다 위(z-index 1)에 두어 불투명 배경으로 가림
+     ※ wrap 에 clip-path 로 잘라내는 방식은 iOS 사파리에서 fixed 요소가 스크롤 중 사라질 수 있어 사용하지 않음 */
 .m_lineup_wrap {position: relative; background-color: #000; overflow: hidden;}
 .m_lineup_wrap .lineup_light {position: absolute; left: 0; width: 100%; pointer-events: none;}
 .m_lineup_wrap .lineup_light img {width: 100%;}
@@ -126,7 +130,7 @@ body {background-color: #141415;}
 /* ---------------------------------------------------------
 	04. WORLD ELITE 등급 혜택 (큐레이션 롤링)
 --------------------------------------------------------- */
-.m_we {background-color: #0b0c0d; padding: 100px 0 96px;}
+.m_we {position: relative; z-index: 1; background-color: #0b0c0d; padding: 100px 0 96px;} /* position · z-index : 03 → 04 전환 중 wrap 밖으로 나온 고정 광선을 가림 (02~03 참고) */
 .m_we .we_inner {position: relative;}
 .m_we .we_fix {position: absolute; left: 0; top: 0; z-index: 2; width: 600px;}
 .m_we .we_fix .tit {font-family: var(--f-suit); font-size: 18px; line-height: 1.4; font-weight: 600; letter-spacing: -0.02em;}
